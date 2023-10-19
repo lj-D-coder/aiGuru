@@ -1,36 +1,12 @@
-const OpenAI = require('openai');
-const express = require('express');
+import express from 'express';
 const app = express();
-require('dotenv').config();
-
-
-const openai_api_key = process.env.OPENAI_API_KEY;
-
-
 const port = 5000; // You can change the port as needed
 
-const openai = new OpenAI({
-  apiKey: openai_api_key
-});
+import router from './routes/api.js';
 
-app.use(express.json());
+app.use(express.json()); //decoding json from request to parse in the function
+app.use('/api',router);
 
-app.post('/ask-queries', async (req, res) => {
-  console.log(req.body);
-  const userMessage = req.body.content;
-
-  try {
-    const chat = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: userMessage }],
-      model: 'gpt-3.5-turbo',
-    });
-    console.log(chat.choices[0].message.content);
-    res.status(200).json({ data: { response: chat.choices[0].message.content } ,statusCode: 1, error:"No error"});
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'An error occurred while processing your request.' });
-  }
-});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
