@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import router from './routes/api.js';
+import askQueries from './routes/ask-queries.js';
 import {Users} from './models/usersModel.js';
 
 const app = express();
@@ -12,7 +12,7 @@ const db_connect = process.env.DB_CONNECT;
 
 app.use(express.json()); //decoding json from request to parse in the function
 app.use(cors());
-app.use('/api',router);
+app.use('/ask-queries',askQueries);
 
 app.post('/users',async(req,res)=>{
     try {

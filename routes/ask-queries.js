@@ -2,8 +2,9 @@ import express from 'express';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 dotenv.config();
+//import {Users} from '../models/usersModel.js';
 
-const router = express.Router();
+const askQueries = express.Router();
 
 const openai_api_key = process.env.OPENAI_API_KEY;
 
@@ -13,7 +14,7 @@ const openai = new OpenAI({
   });
   
   
-  router.post('/ask-queries', async (req, res) => {
+  askQueries.post('/', async (req, res) => {
     console.log(req.body);
     const userMessage = req.body.content;
   
@@ -23,6 +24,12 @@ const openai = new OpenAI({
         model: 'gpt-3.5-turbo',
       });
       console.log(chat.choices[0].message.content);
+    //   const newUser = {
+    //     name: "noname",
+    //     email: chat.choices[0].message.content,
+    //     phoneNo: 12345611,
+    // };
+    // const user = await Users.create(newUser);
       res.status(200).json({ data: { response: chat.choices[0].message.content } ,statusCode: 1, error:"No error"});
     } catch (error) {
       console.error(error);
@@ -31,4 +38,4 @@ const openai = new OpenAI({
   });
 
 
-  export default router;
+  export default askQueries;
