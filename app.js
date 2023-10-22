@@ -1,17 +1,59 @@
 import express from 'express';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import router from './routes/api.js';
+import {Users} from './models/usersModel.js';
+
 const app = express();
 const port = 5000; // You can change the port as needed
-
-import router from './routes/api.js';
+dotenv.config();
+const db_connect = process.env.DB_CONNECT;
 
 app.use(express.json()); //decoding json from request to parse in the function
+app.use(cors());
 app.use('/api',router);
 
+app.post('/users',async(req,res)=>{
+    try {
+        if(
+            !req.body.name || 
+            !req.body.email || 
+            !req.body.phoneNo
+        ) {
+            return response.status(400).send(
+                {
+                    message: "send all required feilds: name, email, phoneNo",
+                });
+        }
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+        const newUser = {
+            name: req.body.name,
+            email: req.body.email,
+            phoneNo: req.body.phoneNo,
+
+        };
+        const user = await Users.create(newUser);
+        return res.status(201).send(user);
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({message: error.message});
+    }
+
 });
 
+mongoose
+    .connect(db_connect)
+    .then(()=>{
+        console.log('App connected  to database');
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+          });
+    })
+    .catch((error)=>{
+        console.log(error);
+    })
 
 
 
