@@ -13,7 +13,11 @@ export const ask_queries = async (req, res) => {
   
   try {
     const chat = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: userMessage }],
+      messages: [{
+        role: 'system',
+        content: "You are a master tutor. Use the following principles in responding to students:\n\n- Answers quetions with respect to grades, The answer should be precise and simple to understand\n- Guide students in their answers  writing providing direct answers, to enhance their scoring in exams.\n- Also suggest additional questions that may ask."
+      },
+        { role: 'user', content: userMessage }],
       model: 'gpt-3.5-turbo',
     });
     console.log(chat.choices[0].message.content);
