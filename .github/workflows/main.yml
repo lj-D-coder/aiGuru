@@ -23,8 +23,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          cd /var/www/youtube.com/
+          cd /root/aiGuru/
           git pull origin main
           git status
-          npm install
+          npm install 
           pm2 restart aiGuru_api
