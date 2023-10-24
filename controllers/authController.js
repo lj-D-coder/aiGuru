@@ -1,7 +1,8 @@
 import bcryptjs from "bcryptjs";
 import { Users } from '../models/usersModel.js';
+//import { errorHandler } from "../utils/error.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
     //console.log(req.body);
     try {
         if(
@@ -27,9 +28,10 @@ export const signup = async (req, res) => {
         });
         
     } catch (error) {
-        console.log(error.message);
-        error.keyValue["message"] = "already exist";
+        // console.log(error.message);
+        // error.keyValue["message"] = "already exist";
         res.status(500).json(error);
+        //next(errorHandler(400,"bad request"));
     }
 
  };
