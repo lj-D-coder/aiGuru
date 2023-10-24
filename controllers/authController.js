@@ -45,10 +45,10 @@ export const signin = async (req, res, next) => {
         if (!validUser) return next (errorHandler(404, 'User not found!'));
         const validPassword = bcryptjs.compareSync(password, validUser.password);
         if (!validPassword) return next(errorHandler(401, 'Wrong credentials!'));
-        const token = jwt.sign({ userId: validUser._id, email: validUser.email }, process.env.JWT_SECRET);
+        const JWT_token = jwt.sign({ userId: validUser._id, email: validUser.email }, process.env.JWT_SECRET);
         const { password: pass, ...rest } = validUser._doc;
         const userData = { Question: "This is a question ", Answer: "This is a sample answer " };
-        res.status(200).json({ success:true, token, userData });
+        res.status(200).json({ success:true, JWT_token, userData });
             //.cookie("access_token", token, { httponly: true , maxAge: 24 * 60 * 60 * 1000 })
             
             
