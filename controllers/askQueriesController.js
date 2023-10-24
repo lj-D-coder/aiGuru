@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 dotenv.config();
-import {Users} from '../models/usersModel.js';
+//import {Users} from '../models/usersModel.js';
  
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
@@ -22,12 +22,12 @@ export const ask_queries = async (req, res) => {
     });
     console.log(chat.choices[0].message.content);
     res.status(200).json({ data: { response: chat.choices[0].message.content }, statusCode: 1, error: "No error" });
-    const newUser = {
-      name: "Tomnao",
-      email: chat.choices[0].message.content,
-      phoneNo: 12345611,
-  };
-  const user = await Users.create(newUser);
+  //   const newUser = {
+  //     name: "Tomnao",
+  //     email: chat.choices[0].message.content,
+  //     phoneNo: 12345611,
+  // };
+  // const user = await Users.create(newUser);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while processing your request.' });

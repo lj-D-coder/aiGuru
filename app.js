@@ -2,46 +2,20 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import askQueries from './routes/ask-queries.js';
-import {Users} from './models/usersModel.js';
+import askRouter from './routes/ask-queries.js';
+import authRouter from './routes/auth.js';
+
 
 const app = express();
 const port = 5000; // You can change the port as needed
 dotenv.config();
 const db_connect = process.env.DB_CONNECT;
 
-app.use(express.json()); //decoding json from request to parse in the function
+app.use(express.json()); //to parse parse json
 app.use(cors());
-app.use('/ask-queries',askQueries);
 
-app.post('/users',async(req,res)=>{
-    try {
-        if(
-            !req.body.name || 
-            !req.body.email || 
-            !req.body.phoneNo
-        ) {
-            return response.status(400).send(
-                {
-                    message: "send all required feilds: name, email, phoneNo",
-                });
-        }
-
-        const newUser = {
-            name: req.body.name,
-            email: req.body.email,
-            phoneNo: req.body.phoneNo,
-
-        };
-        const user = await Users.create(newUser);
-        return res.status(201).send(user);
-        
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).send({message: error.message});
-    }
-
-});
+app.use('/ask-queries',askRouter);
+app.use('/auth',authRouter);
 
 mongoose
     .connect(db_connect)

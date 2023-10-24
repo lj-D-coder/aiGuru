@@ -1,9 +1,9 @@
 import express from 'express';
 import {ask_queries} from '../controllers/askQueriesController.js';
 
-const askQueries = express.Router();
+const router = express.Router();
 
-  askQueries.post('/',ask_queries);
+  router.post('/',ask_queries);
 
 
-  export default askQueries;
+  export default router;
