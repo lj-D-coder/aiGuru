@@ -14,8 +14,15 @@ const usersSchema = mongoose.Schema(
         },
         password:{
             type: String,
-            require: true,
         },
+
+        gAuthToken:{
+            type: String
+        },
+        expiry: {
+            type: String
+        }
+
     },
         {
             timestamps: true,
