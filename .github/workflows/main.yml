@@ -27,4 +27,4 @@ jobs:
           git pull origin main
           git status
           npm install 
-          pm2 restart aiGuru_api
+          pm2 restart aiguru_api
