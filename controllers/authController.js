@@ -21,17 +21,18 @@ export const signup = async (req, res, next) => {
         const hashedPassword = bcryptjs.hashSync(password, 10);
         const newUser = new Users({ username, email, password: hashedPassword });
         const user = await newUser.save();
+        const JWT_token = jwt.sign({ userId: username, email: email }, process.env.JWT_SECRET);
         console.log(user);
+        const userData = { Question: "This is a question ", Answer: "This is a sample answer " };
         
         return res.status(201).json({
-            data: { userId: user.id, email:user.email, userName: user.username },
-            statusCode: 201, error: "successfully created"
+            success:true,JWT_token,userData
         });  
         
     } catch (error) {
         // console.log(error.message);
         error.keyValue["message"] = "already exist";
-        res.status(500).json(error);
+        res.status(200).json(error);
         //next(errorHandler(400,"bad request"));
     }
 
