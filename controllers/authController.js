@@ -31,7 +31,7 @@ export const signup = async (req, res, next) => {
         
     } catch (error) {
         // console.log(error.message);
-        error.keyValue["message"] = "already exist";
+       // error.keyValue["message"] = "already exist";
         res.status(200).json(error);
         //next(errorHandler(400,"bad request"));
     }
