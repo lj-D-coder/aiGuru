@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const usersGenDataSchema = mongoose.Schema(
     {
-        username: {
+        userId: {
             type: String,
         },
         question:{

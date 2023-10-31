@@ -25,7 +25,7 @@ export const ask_queries = async (req, res) => {
     res.status(200).json({ data: { question: userMessage,  response: chat.choices[0].message.content }, statusCode: 1, error: "No error" });
 
       const newUserData = {
-      username: req.body.username,
+      userId: req.body.userId,
       question: userMessage,
       answers: chat.choices[0].message.content,
   };
