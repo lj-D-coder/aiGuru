@@ -14,14 +14,13 @@ export const ask_queries = async (req, res) => {
   var filter='';
   
   if (data.summarize) {
-      data.mark === 0 ? "yes" : "no";
       filter = data.marks === 0 ? 'summarize' : `summarize in ${data.marks} marks`;
-      console.log(filter);
   } else if (data.explainToKid) {
-      filter = data.marks === 0 ? '   explain to me like I am 5 years old' : `explain to kids for ${data.marks} marks`;
+      filter = data.marks === 0 ? 'explain to me like I am 5 years old' : `explain to me like I am 5 years old for ${data.marks} marks`;
   } else {
       filter = data.marks > 0 ? `in ${data.marks} marks` : '';
   }
+
   var userMessage = `${req.body.content} ${filter}`;
   console.log(`Question: ${userMessage}`);
 
