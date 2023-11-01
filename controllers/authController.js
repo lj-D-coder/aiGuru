@@ -78,10 +78,11 @@ export const saveGoogleinfo = async (req, res, next) => {
 
             const updatedData = {gAuthToken: req.body.gToken,expiry: req.body.expiry };
     
-            await Users.updateOne({ email }, updatedData,
+            const userInfo = await Users.updateOne({ email }, updatedData,
                 { upsert: true }
             );
             const JWT_token = jwt.sign({ userId: checkEmail._id, email: checkEmail.email }, process.env.JWT_SECRET);
+            console.log(userInfo);
             res.status(200).json({ success: true, JWT_token });
         }
         
