@@ -3,14 +3,13 @@ import { Users } from '../models/usersModel.js';
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
-export const signup = async (req, res, next) => {
-    //console.log(req.body);
+export const signup = async (req, res) => {
     try {
         if(
             !req.body.email || 
             !req.body.password
         ) {
-            return response.status(400).json(
+            return res.status(400).json(
                 {
                     message: "send all required feilds: email, password",
                 });
@@ -23,12 +22,7 @@ export const signup = async (req, res, next) => {
         const user = await newUser.save();
         const JWT_token = jwt.sign({ userId: user_id, email: email }, process.env.JWT_SECRET);
         console.log(user);
-        const userData = { Question: "This is a question ", Answer: "This is a sample answer " };
-        
-        return res.status(201).json({
-            success:true,JWT_token,userData
-        });  
-        
+        return res.status(201).json({ success:true,JWT_token });
     } catch (error) {
         // console.log(error.message);
        // error.keyValue["message"] = "already exist";
@@ -48,8 +42,7 @@ export const signin = async (req, res, next) => {
         if (!validPassword) return next(errorHandler(401, 'Wrong credentials!'));
         const JWT_token = jwt.sign({ userId: validUser._id, email: validUser.email }, process.env.JWT_SECRET);
         const { password: pass, ...rest } = validUser._doc;
-        const userData = { Question: "This is a question ", Answer: "This is a sample answer " };
-        res.status(200).json({ success: true, JWT_token, userData });
+        res.status(200).json({ success: true, JWT_token });
         //.cookie("access_token", token, { httponly: true , maxAge: 24 * 60 * 60 * 1000 })        
     } catch (error) {
         next(error);
@@ -79,19 +72,17 @@ export const saveGoogleinfo = async (req, res, next) => {
             const userInfo = await saveUserInfo.save();
             console.log(userInfo);
             const JWT_token = jwt.sign({ userId: saveUserInfo._id, email: saveUserInfo.email }, process.env.JWT_SECRET);
-            const userData = { Question: "This is a question ", Answer: "This is a sample answer " };
-            res.status(200).json({ success: true, JWT_token, userData });  
+            res.status(200).json({ success: true, JWT_token });  
         }
         else {
 
             const updatedData = {gAuthToken: req.body.gToken,expiry: req.body.expiry };
     
-            const userInfo = await Users.updateOne({ email }, updatedData,
+            await Users.updateOne({ email }, updatedData,
                 { upsert: true }
             );
             const JWT_token = jwt.sign({ userId: checkEmail._id, email: checkEmail.email }, process.env.JWT_SECRET);
-            const userData = { Question: "This is a question ", Answer: "This is a sample answer " };
-            res.status(200).json({ success: true, JWT_token, userData });
+            res.status(200).json({ success: true, JWT_token });
         }
         
         

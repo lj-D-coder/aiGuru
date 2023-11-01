@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
-//This is test for CICD pipeline 10th attempt
+import routes from './routes/route.js';
 
 const app = express();
 const port = 5000; // You can change the port as needed
@@ -16,6 +16,7 @@ app.use(cors());
 
 app.use('/ask-queries',askRouter);
 app.use('/auth',authRouter);
+app.use('/',routes);
 
 app.use((err, req, res, next) =>{
     const statusCode = err.statusCode || 500;
