@@ -21,7 +21,7 @@ export const signup = async (req, res, next) => {
         const hashedPassword = bcryptjs.hashSync(password, 10);
         const newUser = new Users({ username, email, password: hashedPassword });
         const user = await newUser.save();
-        const JWT_token = jwt.sign({ userId: username, email: email }, process.env.JWT_SECRET);
+        const JWT_token = jwt.sign({ userId: user_id, email: email }, process.env.JWT_SECRET);
         console.log(user);
         const userData = { Question: "This is a question ", Answer: "This is a sample answer " };
         
