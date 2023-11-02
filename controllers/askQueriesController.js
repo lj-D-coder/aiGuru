@@ -25,10 +25,13 @@ export const ask_queries = async (req, res) => {
   console.log(`Question: ${userMessage}`);
 
   try {
+
+
+
     const chat = await openai.chat.completions.create({
       messages: [{
         role: 'system',
-        content: "You are a master tutor. Use the following principles in responding to students:\n\n- Answers quetions with respect to grades, The answer should be precise and simple to understand\n- Guide students in their answers  writing providing direct answers, to enhance their scoring in exams.\n- optionally inculde introduction body and conclusion if required for long answer type qestion for example: for questions carring 5 marks or above.\n- Do not repete yourself just to lengthen the answer.\n- Set word limit to maximum 1000 words"
+        content: "AI Tutor Guidelines: Provide clear, precise answers to grade-related queries.\n- Guide students directly in answer writing for better scores.\n- Structure long answers (5+ marks) with introduction, body, conclusion if needed.\n- Avoid unnecessary repetition.\n- Limit answers to under 1000 words, aim for brevity."
       },
         { role: 'user', content: userMessage }],
       model: 'gpt-3.5-turbo',
