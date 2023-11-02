@@ -25,12 +25,6 @@ export const ask_queries = async (req, res) => {
   console.log(`Question: ${userMessage}`);
 
   try {
-
-
-
-
-
-
     const chat = await openai.chat.completions.create({
       messages: [{
         role: 'system',
