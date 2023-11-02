@@ -28,6 +28,9 @@ export const ask_queries = async (req, res) => {
 
 
 
+
+
+
     const chat = await openai.chat.completions.create({
       messages: [{
         role: 'system',
