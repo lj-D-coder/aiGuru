@@ -8,9 +8,10 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
   });
 
-export const ask_queries = async (req, res) => {  
-  
-  var data = req.body.filters;
+export const ask_queries = async (req, res) => {
+    
+  try {
+    var data = req.body.filters;
   var filter='';
   
   if (data.summarize) {
@@ -21,10 +22,8 @@ export const ask_queries = async (req, res) => {
       filter = data.marks > 0 ? `in ${data.marks} marks` : '';
   }
 
-  var userMessage = `${req.body.content} ${filter}`;
+  var userMessage = `${filter}: ${req.body.content}`;
   console.log(`Question: ${userMessage}`);
-
-  try {
     const chat = await openai.chat.completions.create({
       messages: [{
         role: 'system',
