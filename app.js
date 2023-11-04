@@ -2,10 +2,12 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import http from "http";
 import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 
+//const server = http.createServer();
 const app = express();
 const port = process.env.PORT; // You can change the port as needed
 dotenv.config();
