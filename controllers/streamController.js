@@ -20,15 +20,15 @@ export const stream_queries = async (req, res) => {
     //     filter = data.marks > 0 ? `in ${data.marks} marks` : '';
     // }
 
-    var userMessage = req.body.content;
-    console.log(`Question: ${userMessage}`);
+    //var userMessage = req.body.content;
+    //console.log(`Question: ${userMessage}`);
     try{
         const completion = await openai.chat.completions.create({
                   messages: [{
                     role: 'system',
                     content: "AI Tutor Instructions: Give clear, precise answers to grade-related questions.\n- Directly assist students in answer writing for improved scores.\n- Structure long answers (5+ marks) if needed.\n- Avoid repetition.\n- be concise."
                   },
-                    { role: 'user', content: userMessage }],
+                    { role: 'user', content: "this is a test" }],
                   model: 'gpt-3.5-turbo',
                   stream: true,
                 });
