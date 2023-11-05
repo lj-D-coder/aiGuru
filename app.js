@@ -15,9 +15,19 @@ const io = new Server(server);
 
 
 io.on('connection', client => {
-    client.on('subscribe', data => { console.log(data) });
+    client.on('subscribe', data => { console.log('A user connected') });
     client.on('disconnect', () => { /* … */ });
 });
+
+
+
+// io.on('connection', (socket) => {
+//     console.log('A user connected');
+  
+//     socket.on('disconnect', () => {
+//       console.log('A user disconnected');
+//     });
+//   });
   
 
 const port = process.env.PORT; // You can change the port as needed
