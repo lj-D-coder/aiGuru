@@ -32,7 +32,7 @@ export const stream_queries = async (req, res) => {
                     { role: 'user', content: user_query }],
                   model: 'gpt-3.5-turbo',
                   stream: true,
-                  max_tokens:200,
+                  max_tokens:500,
                 });
 
       res.writeHead(200, {
