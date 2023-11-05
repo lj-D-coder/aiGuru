@@ -12,11 +12,11 @@ const openai = new OpenAI({
 });
 
 export const stream_queries = async (req, res) => {
-    const { filters, content } = req.body
+    //const { filters, content } = req.body
     //const data = req.body.filters;
     //var filter='';
-    console.log(filters);
-    console.log(content);
+    console.log(req);
+    //console.log(content);
     // if (data.summarize) {
     //     filter = data.marks === 0 ? 'summarize' : `summarize in ${data.marks} marks`;
     // } else if (data.explainToKid) {
