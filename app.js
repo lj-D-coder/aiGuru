@@ -8,6 +8,7 @@ import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 
 //const server = http.createServer();
+const app = express();
 
 const port = process.env.PORT; // You can change the port as needed
 dotenv.config();
