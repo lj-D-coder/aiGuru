@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 //import http from "http";
 import dotenv from 'dotenv';
+import {UsersGenData} from '../models/usersGeneratedData.js';
 
 dotenv.config();
 
@@ -20,17 +21,18 @@ export const stream_queries = async (req, res) => {
         filter = data.marks > 0 ? `in ${data.marks} marks` : '';
     }
 
-    var userMessage = `${filter}: ${req.body.content}`;
-    console.log(`Question: ${userMessage}`);
+    var user_query = `${filter}: ${req.body.content}`;
+    console.log(`Question: ${user_query}`);
     try{
         const completion = await openai.chat.completions.create({
                   messages: [{
                     role: 'system',
                     content: "AI Tutor Instructions: Give clear, precise answers to grade-related questions.\n- Directly assist students in answer writing for improved scores.\n- Structure long answers (5+ marks) if needed.\n- Avoid repetition.\n- be concise."
                   },
-                    { role: 'user', content: userMessage }],
+                    { role: 'user', content: user_query }],
                   model: 'gpt-3.5-turbo',
                   stream: true,
+                  max_tokens:200,
                 });
 
       res.writeHead(200, {
@@ -40,14 +42,25 @@ export const stream_queries = async (req, res) => {
           'Access-Control-Allow-Origin': '*',
           'X-Accel-Buffering': 'no',
       });
-        let text = "";
+        let arr_answer = [];
           for await (const chunk of completion) {
             if (chunk === undefined) return;
-            text += chunk.choices[0].delta.content;
+            arr_answer.push(chunk.choices[0].delta.content);
+            console.clear();
             res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
           }
-        console.log(text);
-    res.end();
+        
+        const answer = arr_answer.join('');
+        console.log(answer);
+        res.end();
+        
+        const newUserData = {
+            userId: req.body.userId,
+            question: user_query,
+            answers: answer,
+        };
+        const saveData = await UsersGenData.create(newUserData);
+        console.log(saveData);
 
 } catch (error) {
     console.error(error);
