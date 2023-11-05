@@ -37,15 +37,6 @@ export const stream_queries = async (req, res) => {
                   max_tokens:500,
         });
         
-        io.on("connection", (socket) => {
-            socket.on("cancel_request", (data) => {
-              if (data === true) {
-                keepGoing = false;
-                response.controller.abort();
-              }
-            });
-          });
-
       res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
