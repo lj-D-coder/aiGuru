@@ -5,16 +5,16 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 
 
+
+import express from 'express';
+const app = express();
+
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,
   }),
 );
-
-// import express from 'express';
-// const app = express();
-
 
 dotenv.config();
 
