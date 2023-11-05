@@ -2,8 +2,8 @@ import OpenAI from "openai";
 //import http from "http";
 import dotenv from 'dotenv';
 
-import express from 'express';
-const app = express();
+// import express from 'express';
+// const app = express();
 
 dotenv.config();
 
