@@ -17,7 +17,7 @@ const db_connect = process.env.DB_CONNECT;
 app.use(express.json()); //to parse parse json
 app.use(cors());
 
-app.use('/ask-queries', express.json(),askRouter);
+app.use('/ask-queries', express.urlencoded({extended: true}), askRouter);
 app.use('/auth',authRouter);
 app.use('/',routes);
 
