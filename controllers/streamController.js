@@ -2,6 +2,16 @@ import OpenAI from "openai";
 //import http from "http";
 import dotenv from 'dotenv';
 
+import bodyParser from 'body-parser';
+
+
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+);
+
 // import express from 'express';
 // const app = express();
 
