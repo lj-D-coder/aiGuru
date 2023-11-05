@@ -11,7 +11,12 @@ import { Server } from 'socket.io';
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors:
+    {
+        origin: "*"           
+    }
+});
 
 
 io.on('connection', (socket) => {
@@ -21,41 +26,6 @@ io.on('connection', (socket) => {
     });
   })
 
-
-
-
-// io.on('connection', (socket) => {
-//     console.log('user connected');
-//     socket.emit('connect', {message: 'a new client connected'})
-//     socket.on('disconnect', function () {
-//       console.log('user disconnected');
-//     });
-//   })
-
-
-
-
-
-
-
-// const nsp = io.of('/some');
-// nsp.on('connection', (socket) => {
-//   console.log('connection /some');
-//   socket.on('msg', (data) => {
-//     console.log(`data from /some => ${data}`);
-//     socket.emit('fromServer', 'ok 2');
-//   });
-// });
-
-// // Default namespace
-// io.on('connection', (socket) => {
-//   console.log('connection default namespace');
-//   socket.on('msg', (data) => {
-//     console.log(`data from default => ${data}`);
-//     socket.emit('fromServer', 2);
-//   });
-// });
-  
 
 const port = process.env.PORT; // You can change the port as needed
 dotenv.config();
