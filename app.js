@@ -14,20 +14,23 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 
-io.on('connection', client => {
-    client.on('subscribe', data => { console.log('A user connected') });
-    client.on('disconnect', () => { /* … */ });
+const nsp = io.of('/some');
+nsp.on('connection', (socket) => {
+  console.log('connection /some');
+  socket.on('msg', (data) => {
+    console.log(`data from /some => ${data}`);
+    socket.emit('fromServer', 'ok 2');
+  });
 });
 
-
-
-// io.on('connection', (socket) => {
-//     console.log('A user connected');
-  
-//     socket.on('disconnect', () => {
-//       console.log('A user disconnected');
-//     });
-//   });
+// Default namespace
+io.on('connection', (socket) => {
+  console.log('connection default namespace');
+  socket.on('msg', (data) => {
+    console.log(`data from default => ${data}`);
+    socket.emit('fromServer', 'ok');
+  });
+});
   
 
 const port = process.env.PORT; // You can change the port as needed
