@@ -9,7 +9,6 @@ const openai = new OpenAI({
 });
 
 export const stream_queries = async (req, res) => {
-    const { filters, content } = req.body
     const data = req.body.filters;
     var filter='';
 
@@ -44,7 +43,7 @@ export const stream_queries = async (req, res) => {
           for await (const chunk of completion) {
             if (chunk === undefined) return;
             text += chunk.choices[0].delta.content;
-            res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
+            res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`, `status: 'success'`);
           }
         console.log(text);
     res.end();
