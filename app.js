@@ -6,9 +6,19 @@ import http from "http";
 import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
+import { Server } from 'socket.io';
 
-//const server = http.createServer();
+
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+
+io.on('connection', client => {
+    client.on('subscribe', data => { console.log(data) });
+    client.on('disconnect', () => { /* … */ });
+});
+  
 
 const port = process.env.PORT; // You can change the port as needed
 dotenv.config();
