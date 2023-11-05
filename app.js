@@ -16,10 +16,11 @@ const io = new Server(server);
 
 io.on('connection', (socket) => {
     console.log('user connected');
-    socket.on('disconnect', function () {
-      console.log('user disconnected');
-    });
-  })
+    console.log(socket.id, "has joined");
+    socket.on('/test', (msg) => {
+        console.log(msg);    
+    })
+});
 
 
 const port = process.env.PORT; // You can change the port as needed
