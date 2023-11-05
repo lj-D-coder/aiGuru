@@ -9,18 +9,18 @@ const openai = new OpenAI({
 });
 
 export const stream_queries = async (req, res) => {
-    const data = req.body.filters;
-    var filter='';
+    // const data = req.body.filters;
+    // var filter='';
 
-    if (data.summarize) {
-        filter = data.marks === 0 ? 'summarize' : `summarize in ${data.marks} marks`;
-    } else if (data.explainToKid) {
-        filter = data.marks === 0 ? 'explain to me like I am 5 years old' : `explain to me like I am 5 years old for ${data.marks} marks`;
-    } else {
-        filter = data.marks > 0 ? `in ${data.marks} marks` : '';
-    }
+    // if (data.summarize) {
+    //     filter = data.marks === 0 ? 'summarize' : `summarize in ${data.marks} marks`;
+    // } else if (data.explainToKid) {
+    //     filter = data.marks === 0 ? 'explain to me like I am 5 years old' : `explain to me like I am 5 years old for ${data.marks} marks`;
+    // } else {
+    //     filter = data.marks > 0 ? `in ${data.marks} marks` : '';
+    // }
 
-    var userMessage = `${filter}: ${req.body.content}`;
+    var userMessage = req.body.content;
     console.log(`Question: ${userMessage}`);
     try{
         const completion = await openai.chat.completions.create({
