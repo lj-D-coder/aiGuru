@@ -2,20 +2,6 @@ import OpenAI from "openai";
 //import http from "http";
 import dotenv from 'dotenv';
 
-import bodyParser from 'body-parser';
-
-
-
-import express from 'express';
-const app = express();
-
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  }),
-);
-
 dotenv.config();
 
 const openai = new OpenAI({
