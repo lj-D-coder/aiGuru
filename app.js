@@ -6,6 +6,16 @@ import http from "http";
 import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
+import bodyParser from 'body-parser';
+
+
+
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+);
 
 //const server = http.createServer();
 const app = express();
