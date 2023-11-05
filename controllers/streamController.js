@@ -43,6 +43,7 @@ export const stream_queries = async (req, res) => {
         'Connection': 'keep-alive',
           'Access-Control-Allow-Origin': '*',
           'X-Accel-Buffering': 'no',
+          'HttpHeaders.contentTypeHeader': 'application/x-www-form-urlencoded',
       });
         let arr_answer = [];
           for await (const chunk of completion) {
