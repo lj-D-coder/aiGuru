@@ -38,7 +38,7 @@ export const stream_queries = async (req, res) => {
                 });
 
       res.writeHead(200, {
-        'Content-Type': 'text/event-stream',
+        'Content-Type': 'application/json"',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
           'Access-Control-Allow-Origin': '*',
