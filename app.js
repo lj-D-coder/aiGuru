@@ -9,6 +9,8 @@ import routes from './routes/route.js';
 import bodyParser from 'body-parser';
 
 
+//const server = http.createServer();
+const app = express();
 
 app.use(bodyParser.json());
 app.use(
@@ -16,9 +18,6 @@ app.use(
     extended: true,
   }),
 );
-
-//const server = http.createServer();
-const app = express();
 const port = process.env.PORT; // You can change the port as needed
 dotenv.config();
 const db_connect = process.env.DB_CONNECT;
