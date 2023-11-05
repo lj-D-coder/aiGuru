@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
   console.log('connection default namespace');
   socket.on('msg', (data) => {
     console.log(`data from default => ${data}`);
-    socket.emit('fromServer', 'ok');
+    socket.emit('fromServer', 2);
   });
 });
   
