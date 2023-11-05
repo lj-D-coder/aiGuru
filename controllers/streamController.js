@@ -9,26 +9,26 @@ const openai = new OpenAI({
 });
 
 export const stream_queries = async (req, res) => {
-    // const data = req.body.filters;
-    // var filter='';
+    const data = req.body.filters;
+    var filter='';
 
-    // if (data.summarize) {
-    //     filter = data.marks === 0 ? 'summarize' : `summarize in ${data.marks} marks`;
-    // } else if (data.explainToKid) {
-    //     filter = data.marks === 0 ? 'explain to me like I am 5 years old' : `explain to me like I am 5 years old for ${data.marks} marks`;
-    // } else {
-    //     filter = data.marks > 0 ? `in ${data.marks} marks` : '';
-    // }
+    if (data.summarize) {
+        filter = data.marks === 0 ? 'summarize' : `summarize in ${data.marks} marks`;
+    } else if (data.explainToKid) {
+        filter = data.marks === 0 ? 'explain to me like I am 5 years old' : `explain to me like I am 5 years old for ${data.marks} marks`;
+    } else {
+        filter = data.marks > 0 ? `in ${data.marks} marks` : '';
+    }
 
-    //var userMessage = req.body.content;
-    //console.log(`Question: ${userMessage}`);
+    var userMessage = `${filter}: ${req.body.content}`;
+    console.log(`Question: ${userMessage}`);
     try{
         const completion = await openai.chat.completions.create({
                   messages: [{
                     role: 'system',
                     content: "AI Tutor Instructions: Give clear, precise answers to grade-related questions.\n- Directly assist students in answer writing for improved scores.\n- Structure long answers (5+ marks) if needed.\n- Avoid repetition.\n- be concise."
                   },
-                    { role: 'user', content: "this is a test" }],
+                    { role: 'user', content: userMessage }],
                   model: 'gpt-3.5-turbo',
                   stream: true,
                 });
