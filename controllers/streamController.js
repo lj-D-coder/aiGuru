@@ -38,12 +38,11 @@ export const stream_queries = async (req, res) => {
                 });
 
       res.writeHead(200, {
-        'Content-Type': 'application/json"',
+        'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
           'Access-Control-Allow-Origin': '*',
           'X-Accel-Buffering': 'no',
-          'HttpHeaders.contentTypeHeader': 'application/x-www-form-urlencoded',
       });
         let arr_answer = [];
           for await (const chunk of completion) {
