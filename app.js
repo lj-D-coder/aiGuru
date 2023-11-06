@@ -7,7 +7,7 @@ import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
-//import { streamData } from './controllers/streamController.js';
+import { streamData } from './controllers/streamController.js';
 
 
 const app = express();
@@ -15,13 +15,13 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 
-io.on('connection', (socket) => {
-    console.log('user connected');
-    console.log(socket.id, "has joined");
-    socket.on('/', (msg) => {
-        console.log(msg);    
-    })
-});
+// io.on('connection', (socket) => {
+//     console.log('user connected');
+//     console.log(socket.id, "has joined");
+//     socket.on('/test', (msg) => {
+//         console.log(msg);    
+//     })
+// });
 
 
 const port = process.env.PORT; // You can change the port as needed
@@ -32,7 +32,7 @@ app.use(express.json()); //to parse parse json
 app.use(cors());
 
 
-//app.post('/stream-data', streamData(io));
+app.post('/stream-data', streamData(io));
 
 app.use('/ask-queries', askRouter);
 app.use('/auth',authRouter);
