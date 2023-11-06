@@ -32,7 +32,7 @@ app.use(express.json()); //to parse parse json
 app.use(cors());
 
 
-app.post('/stream-data', streamData(io));
+app.post('/socket.io', streamData(io));
 
 app.use('/ask-queries', askRouter);
 app.use('/auth',authRouter);
@@ -53,7 +53,7 @@ mongoose
     .connect(db_connect)
     .then(()=>{
         console.log('App connected  to database');
-        app.listen(port,"0.0.0.0" , () => {
+        app.listen(port, "0.0.0.0", () => {
             console.log(`Server is running on port ${port}`);
           });
     })
