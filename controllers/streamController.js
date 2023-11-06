@@ -9,7 +9,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const stream_queries = async (req, res) => {
+export const streamData = (io) => async (req, res) => {
     
     try {
         const data = req.body.filters;

@@ -7,6 +7,7 @@ import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
+//import { streamData } from './controllers/streamController.js';
 
 
 const app = express();
@@ -17,7 +18,7 @@ const io = new Server(server);
 io.on('connection', (socket) => {
     console.log('user connected');
     console.log(socket.id, "has joined");
-    socket.on('/test', (msg) => {
+    socket.on('/', (msg) => {
         console.log(msg);    
     })
 });
@@ -29,6 +30,9 @@ const db_connect = process.env.DB_CONNECT;
 
 app.use(express.json()); //to parse parse json
 app.use(cors());
+
+
+//app.post('/stream-data', streamData(io));
 
 app.use('/ask-queries', askRouter);
 app.use('/auth',authRouter);
@@ -49,7 +53,7 @@ mongoose
     .connect(db_connect)
     .then(()=>{
         console.log('App connected  to database');
-        app.listen(port, () => {
+        app.listen(port,"0.0.0.0" , () => {
             console.log(`Server is running on port ${port}`);
           });
     })
