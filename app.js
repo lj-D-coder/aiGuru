@@ -53,7 +53,7 @@ mongoose
     .connect(db_connect)
     .then(()=>{
         console.log('App connected  to database');
-        app.listen(port, "0.0.0.0", () => {
+        app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
           });
     })
