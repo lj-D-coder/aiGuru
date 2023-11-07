@@ -15,7 +15,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
  const hello = () => {
-    return "Hello World!";
+    console.log("Hello World!");
 };
 
 io.on('connection', (socket) => {
@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
     console.log(socket.id, "has joined");
     socket.on('data-stream', (msg) => {
         console.log(msg); 
-        hello;
+        hello();
     })
 });
 
