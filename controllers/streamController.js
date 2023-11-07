@@ -10,7 +10,7 @@ const openai = new OpenAI({
 });
 
 
- export const streamData = (socket) => async () => {
+ export const streamData => async () => {
     
     try {
         // const data = req.body.filters;

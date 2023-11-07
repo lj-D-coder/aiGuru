@@ -7,15 +7,33 @@ import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
-//import { streamData } from './controllers/streamController.js';
+import { streamData } from './controllers/streamController.js';
 
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
- const hello = () => {
-    console.log("Hello World!");
+ const streamChat = async () => {
+    console.log("calling Stream Data");
+        
+    const completion = await openai.chat.completions.create({
+              messages: [{ role: 'user', content: "test" }],
+              model: 'gpt-3.5-turbo',
+              stream: true,
+              max_tokens:500,
+    });
+    
+    let arr_answer = [];
+      for await (const chunk of completion) {
+        if (chunk === undefined) return;
+        arr_answer.push(chunk.choices[0].delta.content);
+          console.clear();
+          socket.emit('answer-stream', () => {
+              JSON.stringify(chunk.choices[0].delta.content);
+        })
+        //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
+      }
 };
 
 io.on('connection', (socket) => {
@@ -23,7 +41,7 @@ io.on('connection', (socket) => {
     console.log(socket.id, "has joined");
     socket.on('data-stream', (msg) => {
         console.log(msg); 
-        hello();
+        streamChat();
     })
 });
 
