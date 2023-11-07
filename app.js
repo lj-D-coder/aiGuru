@@ -33,8 +33,8 @@ const io = new Server(server);
         if (chunk === undefined) return;
         //arr_answer.push(chunk.choices[0].delta.content);
           console.log(chunk.choices[0].delta.content)
-          socket.emit('answer-stream', () => {
-              "this is a emit test ";
+          socket.emit('answer-stream', {
+            message: "this is a emit test"
         })
         //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
       }
@@ -44,11 +44,12 @@ io.on('connection', (socket) => {
     console.log('user connected');
     console.log(socket.id, "has joined");
     socket.on('data-stream', (msg) => {
-        console.log(msg); 
+        console.log(msg);
+        streamChat(socket);
     })
-    socket.emit('answer-stream', {
-        message: "this is an emit test"
-    });
+    // socket.emit('answer-stream', {
+    //     message: "this is an emit test"
+    // });
 });
 
 
