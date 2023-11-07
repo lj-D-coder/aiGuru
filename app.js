@@ -34,7 +34,7 @@ const io = new Server(server);
         //arr_answer.push(chunk.choices[0].delta.content);
           console.log(chunk.choices[0].delta.content)
           socket.emit('answer-stream', {
-            message: "this is a emit test"
+            message: chunk.choices[0].delta.content
         })
         //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
       }
