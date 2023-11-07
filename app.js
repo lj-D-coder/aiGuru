@@ -7,7 +7,7 @@ import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
-import { streamData } from './controllers/streamController.js';
+//import { streamData } from './controllers/streamController.js';
 
 
 const app = express();
