@@ -18,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
- const streamChat = async () => {
+ const streamChat = (socket) => async () => {
     console.log("calling Stream Data");
         
     const completion = await openai.chat.completions.create({
@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
     console.log(socket.id, "has joined");
     socket.on('data-stream', (msg) => {
         console.log(msg); 
-        streamChat();
+        streamChat(socket);
     })
 });
 
