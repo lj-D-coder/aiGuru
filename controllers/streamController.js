@@ -9,12 +9,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-io.on('data-stream', (msg) => {
-    console.log(msg);
-    streamData();
-})
 
- const streamData = (io) => async (req, res) => {
+ export const streamData = (socket) => async () => {
     
     try {
         // const data = req.body.filters;
@@ -56,8 +52,8 @@ io.on('data-stream', (msg) => {
             if (chunk === undefined) return;
             arr_answer.push(chunk.choices[0].delta.content);
               console.clear();
-              io.emit('answer-stream', () => {
-                 JSON.stringify(chunk.choices[0].delta.content)
+              socket.emit('answer-stream', () => {
+                  JSON.stringify(chunk.choices[0].delta.content);
             })
             //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
           }

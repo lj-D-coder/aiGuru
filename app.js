@@ -7,7 +7,7 @@ import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
-//import { streamData } from './controllers/streamController.js';
+import { streamData } from './controllers/streamController.js';
 
 
 const app = express();
@@ -19,7 +19,9 @@ io.on('connection', (socket) => {
     console.log('user connected');
     console.log(socket.id, "has joined");
     socket.on('data-stream', (msg) => {
-        console.log(msg);    
+        console.log(msg); 
+        streamData(socket);
+        
     })
 });
 
