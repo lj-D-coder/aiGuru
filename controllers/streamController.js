@@ -30,6 +30,8 @@ io.on('data-stream', (msg) => {
 
         // var user_query = `${filter}: ${req.body.content}`;
         // console.log(`Question: ${user_query}`);
+
+        console.log("calling Stream Data");
         
         const completion = await openai.chat.completions.create({
                   messages: [{
