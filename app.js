@@ -28,13 +28,13 @@ const io = new Server(server);
               max_tokens:500,
     });
     
-    let arr_answer = [];
+    //let arr_answer = [];
       for await (const chunk of completion) {
         if (chunk === undefined) return;
-        arr_answer.push(chunk.choices[0].delta.content);
-          console.clear();
+        //arr_answer.push(chunk.choices[0].delta.content);
+          console.log(chunk.choices[0].delta.content)
           socket.emit('answer-stream', () => {
-              JSON.stringify(chunk.choices[0].delta.content);
+              chunk.choices[0].delta.content;
         })
         //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
       }
