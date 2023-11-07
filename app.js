@@ -20,10 +20,13 @@ io.on('connection', (socket) => {
     console.log(socket.id, "has joined");
     socket.on('data-stream', (msg) => {
         console.log(msg); 
-        streamData(socket);
-        
+        hello();
     })
 });
+
+hello = () => {
+    return "Hello World!";
+  }
 
 
 const port = process.env.PORT; // You can change the port as needed
