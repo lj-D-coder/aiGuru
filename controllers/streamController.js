@@ -9,7 +9,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-socket.on('data-stream', (msg) => {
+io.on('data-stream', (msg) => {
     console.log(msg);
     streamData();
 })
@@ -54,7 +54,7 @@ socket.on('data-stream', (msg) => {
             if (chunk === undefined) return;
             arr_answer.push(chunk.choices[0].delta.content);
               console.clear();
-              socket.emit('answer-stream', () => {
+              io.emit('answer-stream', () => {
                  JSON.stringify(chunk.choices[0].delta.content)
             })
             //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
