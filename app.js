@@ -14,6 +14,9 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+hello = () => {
+    return "Hello World!";
+};
 
 io.on('connection', (socket) => {
     console.log('user connected');
@@ -24,9 +27,7 @@ io.on('connection', (socket) => {
     })
 });
 
-hello = () => {
-    return "Hello World!";
-  }
+
 
 
 const port = process.env.PORT; // You can change the port as needed
