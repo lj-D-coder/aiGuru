@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
     console.log(socket.id, "has joined");
     socket.on('data-stream', (msg) => {
         console.log(msg); 
-        hello();
+        hello;
     })
 });
 
