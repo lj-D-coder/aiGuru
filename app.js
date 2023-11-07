@@ -36,9 +36,9 @@ const io = new Server(server);
           socket.emit('answer-stream', {
             message: chunk.choices[0].delta.content
           })
-          socket.disconnect();
         //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
       }
+      socket.disconnect();
 };
 
 io.on('connection', (socket) => {
