@@ -35,7 +35,8 @@ const io = new Server(server);
           console.log(chunk.choices[0].delta.content)
           socket.emit('answer-stream', {
             message: chunk.choices[0].delta.content
-        })
+          })
+          socket.disconnect();
         //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
       }
 };
@@ -47,7 +48,6 @@ io.on('connection', (socket) => {
         console.log(msg);
         streamChat(socket);
     })
-    io.disconnectSockets();
 });
 
 
