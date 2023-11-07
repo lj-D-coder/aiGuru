@@ -47,9 +47,7 @@ io.on('connection', (socket) => {
         console.log(msg);
         streamChat(socket);
     })
-    // socket.emit('answer-stream', {
-    //     message: "this is an emit test"
-    // });
+    io.disconnectSockets();
 });
 
 
