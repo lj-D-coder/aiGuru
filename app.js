@@ -7,8 +7,12 @@ import askRouter from './routes/ask-queries.js';
 import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
+import OpenAI from "openai";
 //import { streamData } from './controllers/streamController.js';
 
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
 
 const app = express();
 const server = http.createServer(app);

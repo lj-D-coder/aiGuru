@@ -10,7 +10,7 @@ const openai = new OpenAI({
 });
 
 
- export const streamData => async () => {
+ export const streamData = (io) => async (req, res) => {
     
     try {
         // const data = req.body.filters;
@@ -52,8 +52,8 @@ const openai = new OpenAI({
             if (chunk === undefined) return;
             arr_answer.push(chunk.choices[0].delta.content);
               console.clear();
-              socket.emit('answer-stream', () => {
-                  JSON.stringify(chunk.choices[0].delta.content);
+              io.emit('answer-stream', () => {
+                 JSON.stringify(chunk.choices[0].delta.content)
             })
             //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
           }
