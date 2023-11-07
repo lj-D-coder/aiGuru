@@ -18,11 +18,13 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
- const streamChat  = async (socket) => {
+const streamChat = async (socket, param) => {
+    const data = param;
+    const query = data.query;
     console.log("calling Stream Data");
         
     const completion = await openai.chat.completions.create({
-              messages: [{ role: 'user', content: "test" }],
+              messages: [{ role: 'user', content: query }],
               model: 'gpt-3.5-turbo',
               stream: true,
               max_tokens:500,
@@ -44,9 +46,9 @@ const io = new Server(server);
 io.on('connection', (socket) => {
     console.log('user connected');
     console.log(socket.id, "has joined");
-    socket.on('data-stream', (msg) => {
-        console.log(msg);
-        streamChat(socket);
+    socket.on('data-stream', (param) => {
+        console.log(param);
+        streamChat(socket, param);
     })
 });
 
