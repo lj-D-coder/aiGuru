@@ -45,10 +45,10 @@ io.on('connection', (socket) => {
     console.log(socket.id, "has joined");
     socket.on('data-stream', (msg) => {
         console.log(msg); 
-        socket.emit('answer-stream', () => {
-            "this is a emit test ";
-      })
     })
+    socket.emit('answer-stream', {
+        message: "this is an emit test"
+    });
 });
 
 
