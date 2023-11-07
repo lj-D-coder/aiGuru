@@ -9,8 +9,13 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const stream_queries = async (req, res) => {
-    const data = req.body.filters;
+const length = 20;
+// Generate a line of #
+const line = '#'.repeat(length);
+
+
+export const streamChat = async (socket,param) => {
+    const data = param;
     var filter='';
 
     if (data.summarize) {
@@ -21,8 +26,10 @@ export const stream_queries = async (req, res) => {
         filter = data.marks > 0 ? `in ${data.marks} marks` : '';
     }
 
-    var userMessage = `${filter}: ${req.body.content}`;
+    var userMessage = `${filter}: ${data.query}`;
     console.log(`Question: ${userMessage}`);
+    // Print the line to the console
+    console.log(line);
     try{
         const completion = await openai.chat.completions.create({
                   messages: [{
@@ -35,32 +42,34 @@ export const stream_queries = async (req, res) => {
                   max_tokens:200,
                 });
 
-      res.writeHead(200, {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-          'Access-Control-Allow-Origin': '*',
-          'X-Accel-Buffering': 'no',
-      });
+    //   res.writeHead(200, {
+    //     'Content-Type': 'text/event-stream',
+    //     'Cache-Control': 'no-cache',
+    //     'Connection': 'keep-alive',
+    //       'Access-Control-Allow-Origin': '*',
+    //       'X-Accel-Buffering': 'no',
+    //   });
         let arr_answer = [];
           for await (const chunk of completion) {
             if (chunk === undefined) return;
             arr_answer.push(chunk.choices[0].delta.content);
-            console.clear();
-            res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
+            socket.emit('answer-stream',`${chunk.choices[0].delta.content}`)
+            //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
           }
-        
+        socket.disconnect();
         const answer = arr_answer.join('');
         console.log(answer);
-        res.end();
+        console.log(line);
+        console.log(line);
+        //res.end();
         
         const newUserData = {
-            userId: req.body.userId,
+            userId: data.userId,
             question: userMessage,
             answers: fullAnswer,
         };
         const saveData = await UsersGenData.create(newUserData);
-        console.log(saveData);
+        //console.log(saveData);
 
 } catch (error) {
     console.error(error);

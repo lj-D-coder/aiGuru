@@ -8,7 +8,7 @@ import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
 import OpenAI from "openai";
-//import { streamData } from './controllers/streamController.js';
+import { streamChat } from './controllers/streamController.js';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -18,30 +18,30 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const streamChat = async (socket, param) => {
-    const data = param;
-    const query = data.query;
-    console.log(data);
-    console.log("calling Stream Data");
+// const streamChat = async (socket, param) => {
+//     const data = param;
+//     const query = data.query;
+//     console.log(data);
+//     console.log("calling Stream Data");
         
-    const completion = await openai.chat.completions.create({
-              messages: [{ role: 'user', content: query }],
-              model: 'gpt-3.5-turbo',
-              stream: true,
-              max_tokens:500,
-    });
+//     const completion = await openai.chat.completions.create({
+//               messages: [{ role: 'user', content: query }],
+//               model: 'gpt-3.5-turbo',
+//               stream: true,
+//               max_tokens:500,
+//     });
     
-    //let arr_answer = [];
-      for await (const chunk of completion) {
-        if (chunk === undefined) return;
-        //arr_answer.push(chunk.choices[0].delta.content);
-          console.log(chunk.choices[0].delta.content)
-          socket.emit('answer-stream',`${chunk.choices[0].delta.content}`)
-              //message: JSON.stringify(chunk.choices[0].delta.content)
-              //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
-      }
-      socket.disconnect();
-};
+//     //let arr_answer = [];
+//       for await (const chunk of completion) {
+//         if (chunk === undefined) return;
+//         //arr_answer.push(chunk.choices[0].delta.content);
+//           console.log(chunk.choices[0].delta.content)
+//           socket.emit('answer-stream',`${chunk.choices[0].delta.content}`)
+//               //message: JSON.stringify(chunk.choices[0].delta.content)
+//               //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
+//       }
+//       socket.disconnect();
+// };
 
 io.on('connection', (socket) => {
     console.log('user connected');
@@ -115,20 +115,6 @@ app.all('*',(req, res)=>{
     res.status(404).send("<h1>Resource Not found</h1>");
 });
 
-
-app.listen(5000, ()=>{
-    console.log("server is running on port 5000...")
-});
-
 */
 
-// const http = require('http');
 
-// const server = http.createServer((req, res)=>{
-//     res.end("Hello world");
-// });
-
-
-// server.listen(5000, ()=>{
-//     console.log("server listening on port: 5000...");
-// });
