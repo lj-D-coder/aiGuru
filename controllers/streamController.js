@@ -52,10 +52,11 @@ export const streamChat = async (socket,param) => {
         let arr_answer = [];
           for await (const chunk of completion) {
             if (chunk === undefined) return;
-            arr_answer.push(chunk.choices[0].delta.content);
-            socket.emit('answer-stream',`${chunk.choices[0].delta.content}`)
+            let message = chunk.choices[0].delta.content;
+            arr_answer.push(message);
+            socket.emit('answer-stream',`${message}`)
             //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
-            if (message === '[DONE]') {
+            if (message === undefined) {
               socket.disconnect();
              }
           }
