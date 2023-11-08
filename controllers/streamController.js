@@ -39,7 +39,7 @@ export const streamChat = async (socket,param) => {
                     { role: 'user', content: userMessage }],
                   model: 'gpt-3.5-turbo',
                   stream: true,
-                  max_tokens:200,
+                  max_tokens:50,
                 });
 
     //   res.writeHead(200, {
@@ -55,8 +55,11 @@ export const streamChat = async (socket,param) => {
             arr_answer.push(chunk.choices[0].delta.content);
             socket.emit('answer-stream',`${chunk.choices[0].delta.content}`)
             //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
+            if (message === '[DONE]') {
+              socket.disconnect();
+             }
           }
-        socket.disconnect();
+        
         const answer = arr_answer.join('');
         console.log(answer);
         console.log(line);
