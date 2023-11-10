@@ -70,7 +70,7 @@ export const streamChat = async (socket,param) => {
         const newUserData = {
             userId: data.userId,
             question: userMessage,
-            answers: fullAnswer,
+            answers: answer,
         };
         const saveData = await UsersGenData.create(newUserData);
         //console.log(saveData);
