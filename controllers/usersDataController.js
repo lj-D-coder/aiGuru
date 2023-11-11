@@ -11,7 +11,7 @@ export const ques_ans = async (req, res, next) => {
         const validUser = await Users.findOne({ _id: userId });
         
         if (!validUser) return next(errorHandler(404, 'User not found!'));
-        const userData = await UsersGenData.find({userId: validUser._id}).select('question answers').sort({ createdAt: -1 });
+        const userData = await UsersGenData.find({userId: validUser._id}).sort({ createdAt: -1 });
         console.log(validUser);
         res.status(200).json({ success: true, userData });
     } catch (error) {
