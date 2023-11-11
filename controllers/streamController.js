@@ -55,12 +55,13 @@ export const streamChat = async (socket, param) => {
     //       'X-Accel-Buffering': 'no',
     //   });
 
-    param = undefined;
     let arr_answer = [];
     for await (const chunk of completion) {
       let message = chunk.choices[0].delta.content;
       if (message === undefined) {
-        socket.disconnect(delete (socket.id));
+        socket.disconnect(
+          console.log("socket disconnected inside loop")
+        );
       }
       arr_answer.push(message);
       socket.emit("answer-stream", `${message}`);
@@ -68,7 +69,10 @@ export const streamChat = async (socket, param) => {
     }
     
 
-    socket.disconnect(delete(socket.id));
+    socket.disconnect(
+      console.log("socket disconnected ouside loop")
+    );
+
     const answer = arr_answer.join("");
     console.log(answer);
     console.log(line);
