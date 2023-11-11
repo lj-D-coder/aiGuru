@@ -14,7 +14,7 @@ const length = 20;
 const line = "#".repeat(length);
 
 export const streamChat = async (socket, param) => {
-  const data = param;
+  let data = param;
   var filter = "";
 
   if (data.summarize) {
