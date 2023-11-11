@@ -51,7 +51,6 @@ export const streamChat = async (socket,param) => {
     //   });
         let arr_answer = [];
           for await (const chunk of completion) {
-            if (chunk === undefined) return;
             let message = chunk.choices[0].delta.content;
             arr_answer.push(message);
             socket.emit('answer-stream',`${message}`)

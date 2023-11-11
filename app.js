@@ -50,11 +50,13 @@ io.on('connection', (socket) => {
         console.log(param);
         streamChat(socket, param);
     })
+
+    // socket.on('disconnect', () => {
+    //     console.log('Disconnected from server');
+    // });
 });
 
-socket.on('disconnect', () => {
-    console.log('Disconnected from server');
-});
+
 
 
 
