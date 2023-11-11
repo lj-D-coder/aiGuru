@@ -9,6 +9,7 @@ import routes from './routes/route.js';
 import { Server } from 'socket.io';
 import OpenAI from "openai";
 import { streamChat } from './controllers/streamController.js';
+import chalk from 'chalk';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -57,6 +58,7 @@ mongoose
         console.log('App connected  to database');
         server.listen(port,"0.0.0.0", () => {
             console.log(`Server is running on port ${port}`);
+            console.log(chalk.green('this should print in green color'));
           });
     })
     .catch((error)=>{

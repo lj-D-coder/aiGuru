@@ -5,12 +5,6 @@ import chalk from 'chalk';
 
 dotenv.config();
 
-if (chalk.supportsColor) {
-  console.log(chalk.green('This terminal supports color!'));
-} else {
-  console.log('This terminal does not support color.');
-}
-
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -44,13 +38,16 @@ export const streamChat = async (socket, param) => {
       messages: [
         {
           role: "system",
-          content: "AI Tutor: Give clear \n- Avoid repetition \n-  be concise",
+          content: "You are an AI Tutor: Give clear \n- Avoid repetition \n-  be concise answer",
         },
-        { role: "user", content: userMessage },
+        {
+          role: "user",
+          content: userMessage
+        },
       ],
       model: "gpt-3.5-turbo",
       stream: true,
-      max_tokens: 250,
+      max_tokens: 300,
     });
 
     let arr_answer = [];
