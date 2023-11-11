@@ -24,7 +24,7 @@ export const ask_queries = async (req, res) => {
       filter = data.marks > 0 ? `in ${data.marks} marks` : "";
     }
 
-    var userMessage = `${filter}: ${req.body.content}`;
+    var userMessage = `${req.body.content} ? ${filter}: `;
     console.log(`Question: ${userMessage}`);
 
     const chat = await openai.chat.completions.create({
@@ -32,7 +32,7 @@ export const ask_queries = async (req, res) => {
         {
           role: "system",
           content:
-            "AI Tutor Instructions: Give clear, precise answers to grade-related questions.\n- Directly assist students in answer writing for improved scores.\n- Structure long answers (5+ marks) if needed.\n- Avoid repetition.\n- be concise.",
+            "AI Tutor Instructions: Give clear, precise answers .\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.",
         },
         { role: "user", content: userMessage },
       ],

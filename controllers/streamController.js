@@ -29,7 +29,7 @@ export const streamChat = async (socket, param) => {
     filter = data.filters["marks"] > 0 ? `in ${data.filters["marks"]} marks` : "";
   }
 
-  var userMessage = `${filter}: ${data.query}`;
+  var userMessage = `${data.query} ? ${filter}`;
   console.log(`Question: ${userMessage}`);
   // Print the line to the console
   console.log(chalk.green(line).toString());
