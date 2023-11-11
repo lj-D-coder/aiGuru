@@ -69,10 +69,6 @@ export const streamChat = async (socket, param) => {
     }
     
 
-    socket.disconnect(
-      console.log("socket disconnected ouside loop")
-    );
-
     const answer = arr_answer.join("");
     console.log(answer);
     console.log(line);
@@ -86,7 +82,7 @@ export const streamChat = async (socket, param) => {
     };
     const saveData = await UsersGenData.create(newUserData);
 
-    completion = null; // unsetting completion data
+    completion = null; // resetting socket data
     //console.log(saveData);
   } catch (error) {
     console.error(error);
