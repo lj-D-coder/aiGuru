@@ -48,7 +48,9 @@ export const streamChat = async (socket,param) => {
     //     'Connection': 'keep-alive',
     //       'Access-Control-Allow-Origin': '*',
     //       'X-Accel-Buffering': 'no',
-    //   });
+      //   });
+      
+      data = undefined;
         let arr_answer = [];
           for await (const chunk of completion) {
             let message = chunk.choices[0].delta.content;
@@ -56,7 +58,9 @@ export const streamChat = async (socket,param) => {
             socket.emit('answer-stream',`${message}`)
             //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
             if (message === undefined) {
-              socket.disconnect();
+              socket.disconnect(
+                delete(socket.id)
+              );
              }
           }
         
