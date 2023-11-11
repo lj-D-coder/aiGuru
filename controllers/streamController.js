@@ -74,7 +74,7 @@ export const streamChat = async (socket, param) => {
     //res.end();
 
     const newUserData = {
-      userId: data.userId,
+      //userId: data.userId,
       question: userMessage,
       answers: answer,
     };
