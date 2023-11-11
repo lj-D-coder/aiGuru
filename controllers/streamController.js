@@ -18,7 +18,7 @@ const line = "#".repeat(length);
 export const streamChat = async (socket, param) => {
   let data = param;
   console.log(data);
-  console.log(chalk.red(line));
+  console.log(chalk.red(line).toString());
   var filter = "";
 
   if (data.filters["summarize"]) {
@@ -32,7 +32,7 @@ export const streamChat = async (socket, param) => {
   var userMessage = `${filter}: ${data.query}`;
   console.log(`Question: ${userMessage}`);
   // Print the line to the console
-  console.log(chalk.green(line));
+  console.log(chalk.green(line).toString());
   try {
     var completion = await openai.chat.completions.create({
       messages: [
@@ -61,7 +61,7 @@ export const streamChat = async (socket, param) => {
 
     const answer = arr_answer.join("");
     console.log(answer);
-    console.log(chalk.blue(line));
+    console.log(chalk.blue(line).toString());
 
     const newUserData = {
       userId: data.userId,
