@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-//import http from "http";
 import dotenv from "dotenv";
 import { UsersGenData } from "../models/usersGeneratedData.js";
 
@@ -9,12 +8,16 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const length = 20;
+const length = 100;
 // Generate a line of #
 const line = "#".repeat(length);
 
+// streaming function starts here
+
 export const streamChat = async (socket, param) => {
   let data = param;
+  console.log(data);
+  console.log(line, 'color: red');
   var filter = "";
 
   if (data.summarize) {
@@ -32,7 +35,7 @@ export const streamChat = async (socket, param) => {
   var userMessage = `${filter}: ${data.query}`;
   console.log(`Question: ${userMessage}`);
   // Print the line to the console
-  console.log(line);
+  console.log(line, 'color: blue');
   try {
     var completion = await openai.chat.completions.create({
       messages: [
@@ -47,43 +50,30 @@ export const streamChat = async (socket, param) => {
       max_tokens: 100,
     });
 
-    //   res.writeHead(200, {
-    //     'Content-Type': 'text/event-stream',
-    //     'Cache-Control': 'no-cache',
-    //     'Connection': 'keep-alive',
-    //       'Access-Control-Allow-Origin': '*',
-    //       'X-Accel-Buffering': 'no',
-    //   });
-
     let arr_answer = [];
     for await (const chunk of completion) {
       let message = chunk.choices[0].delta.content;
       if (message === undefined) {
         socket.disconnect(
-          console.log("socket disconnected inside loop")
+          console.log("socket disconnected")
         );
       }
       arr_answer.push(message);
       socket.emit("answer-stream", `${message}`);
-      //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
     }
-    
 
     const answer = arr_answer.join("");
     console.log(answer);
-    console.log(line);
-    console.log(line);
-    //res.end();
+    console.log(line,'color: green');
 
     const newUserData = {
-      //userId: data.userId,
+      userId: data.userId,
       question: userMessage,
       answers: answer,
     };
     const saveData = await UsersGenData.create(newUserData);
-
     completion = null; // resetting socket data
-    //console.log(saveData);
+
   } catch (error) {
     console.error(error);
   }

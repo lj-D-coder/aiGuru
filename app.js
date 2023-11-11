@@ -18,30 +18,6 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// const streamChat = async (socket, param) => {
-//     const data = param;
-//     const query = data.query;
-//     console.log(data);
-//     console.log("calling Stream Data");
-        
-//     const completion = await openai.chat.completions.create({
-//               messages: [{ role: 'user', content: query }],
-//               model: 'gpt-3.5-turbo',
-//               stream: true,
-//               max_tokens:500,
-//     });
-    
-//     //let arr_answer = [];
-//       for await (const chunk of completion) {
-//         if (chunk === undefined) return;
-//         //arr_answer.push(chunk.choices[0].delta.content);
-//           console.log(chunk.choices[0].delta.content)
-//           socket.emit('answer-stream',`${chunk.choices[0].delta.content}`)
-//               //message: JSON.stringify(chunk.choices[0].delta.content)
-//               //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
-//       }
-//       socket.disconnect();
-// };
 
 io.on('connection', (socket) => {
     console.log('user connected');
@@ -50,14 +26,7 @@ io.on('connection', (socket) => {
         console.log(param);
         streamChat(socket, param);
     })
-
-    // socket.on('disconnect', () => {
-    //     console.log('Disconnected from server');
-    // });
 });
-
-
-
 
 
 const port = process.env.PORT; // You can change the port as needed
@@ -67,8 +36,6 @@ const db_connect = process.env.DB_CONNECT;
 app.use(express.json()); //to parse parse json
 app.use(cors());
 
-
-//app.post('/stream', streamData(io));
 
 app.use('/ask-queries', askRouter);
 app.use('/auth',authRouter);
@@ -97,29 +64,5 @@ mongoose
         console.log(error);
     })
 
-
-
-// app.get
-// app.post
-// app.put -- update
-// app.delete
-// app.all
-// app.use -- middleware
-// app.listen
-
-/** 
-app.get('/',(req, res)=>{
-    res.status(200).send("Home page");
-});
-
-app.get('/about',(req, res)=>{
-    res.send("About Page");
-});
-
-app.all('*',(req, res)=>{
-    res.status(404).send("<h1>Resource Not found</h1>");
-});
-
-*/
 
 
