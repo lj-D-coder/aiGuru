@@ -34,7 +34,7 @@ export const streamChat = async (socket, param) => {
   // Print the line to the console
   console.log(line);
   try {
-    const completion = await openai.chat.completions.create({
+    var completion = await openai.chat.completions.create({
       messages: [
         {
           role: "system",
@@ -58,20 +58,20 @@ export const streamChat = async (socket, param) => {
     let arr_answer = [];
     for await (const chunk of completion) {
       let message = chunk.choices[0].delta.content;
-      // if (message === undefined) {
-      //   socket.disconnect(
-      //     console.log("socket disconnected inside loop")
-      //   );
-      // }
+      if (message === undefined) {
+        socket.disconnect(
+          console.log("socket disconnected inside loop")
+        );
+      }
       arr_answer.push(message);
       socket.emit("answer-stream", `${message}`);
       //res.write(`data: ${JSON.stringify(chunk.choices[0].delta.content)}\n\n`);
     }
     
 
-    // socket.disconnect(
-    //   console.log("socket disconnected ouside loop")
-    // );
+    socket.disconnect(
+      console.log("socket disconnected ouside loop")
+    );
 
     const answer = arr_answer.join("");
     console.log(answer);
@@ -85,6 +85,8 @@ export const streamChat = async (socket, param) => {
       answers: answer,
     };
     const saveData = await UsersGenData.create(newUserData);
+
+    completion = null; // unsetting completion data
     //console.log(saveData);
   } catch (error) {
     console.error(error);
