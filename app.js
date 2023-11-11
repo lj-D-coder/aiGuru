@@ -58,7 +58,6 @@ mongoose
         console.log('App connected  to database');
         server.listen(port,"0.0.0.0", () => {
             console.log(`Server is running on port ${port}`);
-            console.log(chalk.green('this should print in green color'));
           });
     })
     .catch((error)=>{
