@@ -21,12 +21,12 @@ export const streamChat = async (socket, param) => {
   console.log(chalk.red(line));
   var filter = "";
 
-  if (data.filters[summarize]) {
-    filter = data.filters[marks] === 0 ? "summarize" : `summarize in ${data.filters[marks]} marks`;
-  } else if (data.filters[explainToKid]) {
-    filter = data.filters[marks] === 0 ? "explain to 5 years old" : `explain to 5 years old ${data.filters[marks]} marks`;
+  if (data.filters["summarize"]) {
+    filter = data.filters["marks"] === 0 ? "summarize" : `summarize in ${data.filters["marks"]} marks`;
+  } else if (data.filters["explainToKid"]) {
+    filter = data.filters["marks"] === 0 ? "explain to 5 years old" : `explain to 5 years old ${data.filters["marks"]} marks`;
   } else {
-    filter = data.filters[marks] > 0 ? `in ${data.filters[marks]} marks` : "";
+    filter = data.filters["marks"] > 0 ? `in ${data.filters["marks"]} marks` : "";
   }
 
   var userMessage = `${filter}: ${data.query}`;
