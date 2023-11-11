@@ -5,6 +5,12 @@ import chalk from 'chalk';
 
 dotenv.config();
 
+if (chalk.supportsColor) {
+  console.log(chalk.green('This terminal supports color!'));
+} else {
+  console.log('This terminal does not support color.');
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
