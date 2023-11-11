@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import { UsersGenData } from "../models/usersGeneratedData.js";
+import chalk from 'chalk';
 
 dotenv.config();
 
@@ -17,37 +18,33 @@ const line = "#".repeat(length);
 export const streamChat = async (socket, param) => {
   let data = param;
   console.log(data);
-  console.log(line, 'color: red');
+  console.log(chalk.red(line));
   var filter = "";
 
-  if (data.summarize) {
-    filter =
-      data.marks === 0 ? "summarize" : `summarize in ${data.marks} marks`;
-  } else if (data.explainToKid) {
-    filter =
-      data.marks === 0
-        ? "explain to me like I am 5 years old"
-        : `explain to me like I am 5 years old for ${data.marks} marks`;
+  if (data.filters[summarize]) {
+    filter = data.filters[marks] === 0 ? "summarize" : `summarize in ${data.filters[marks]} marks`;
+  } else if (data.filters[explainToKid]) {
+    filter = data.filters[marks] === 0 ? "explain to 5 years old" : `explain to 5 years old ${data.filters[marks]} marks`;
   } else {
-    filter = data.marks > 0 ? `in ${data.marks} marks` : "";
+    filter = data.filters[marks] > 0 ? `in ${data.filters[marks]} marks` : "";
   }
 
   var userMessage = `${filter}: ${data.query}`;
   console.log(`Question: ${userMessage}`);
   // Print the line to the console
-  console.log(line, 'color: blue');
+  console.log(chalk.green(line));
   try {
     var completion = await openai.chat.completions.create({
       messages: [
         {
           role: "system",
-          content: "AI Tutor: Give clear, precise answers",
+          content: "AI Tutor: Give clear \n- Avoid repetition \n-  be concise",
         },
         { role: "user", content: userMessage },
       ],
       model: "gpt-3.5-turbo",
       stream: true,
-      max_tokens: 100,
+      max_tokens: 250,
     });
 
     let arr_answer = [];
@@ -64,14 +61,14 @@ export const streamChat = async (socket, param) => {
 
     const answer = arr_answer.join("");
     console.log(answer);
-    console.log(line,'color: green');
+    console.log(chalk.blue(line));
 
     const newUserData = {
       userId: data.userId,
       question: userMessage,
       answers: answer,
     };
-    const saveData = await UsersGenData.create(newUserData);
+    await UsersGenData.create(newUserData);
     completion = null; // resetting socket data
 
   } catch (error) {

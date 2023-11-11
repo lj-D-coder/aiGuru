@@ -23,7 +23,6 @@ io.on('connection', (socket) => {
     console.log('user connected');
     console.log(socket.id, "has joined");
     socket.on('data-stream', (param) => {
-        console.log(param);
         streamChat(socket, param);
     })
 });
