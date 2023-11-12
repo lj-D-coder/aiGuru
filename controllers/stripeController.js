@@ -9,7 +9,8 @@ const stripe = Stripe(stripeSecretKey);
 const endpointSecret = "whsec_6b4c83d190252c824f4aeb3d6b6873f8fe2da3ba530ade7abe1cd2ebf9d70b52";
 
 export const stripeHook = (request, response) => {
-  const sig = request.headers['stripe-signature'];
+    const sig = request.headers['stripe-signature'];
+    console.log(request);
 
   let event;
 
