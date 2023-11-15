@@ -9,17 +9,27 @@ import routes from './routes/route.js';
 import { Server } from 'socket.io';
 import OpenAI from "openai";
 import { streamChat } from './controllers/streamController.js';
-import chalk from 'chalk';
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); //to parse parse json
+app.use(cors());
 
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+const port = process.env.PORT; // You can change the port as needed
+dotenv.config();
+const db_connect = process.env.DB_CONNECT;
+
+
+
+//sockeet IO
 io.on('connection', (socket) => {
     console.log('user connected');
     console.log(socket.id, "has joined");
@@ -28,19 +38,14 @@ io.on('connection', (socket) => {
     })
 });
 
-
-const port = process.env.PORT; // You can change the port as needed
-dotenv.config();
-const db_connect = process.env.DB_CONNECT;
-
-app.use(express.json()); //to parse parse json
-app.use(cors());
-
+//Routes 
 
 app.use('/ask-queries', askRouter);
 app.use('/auth',authRouter);
 app.use('/',routes);
 
+
+// Erron handling
 app.use((err, req, res, next) =>{
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
@@ -56,7 +61,7 @@ mongoose
     .connect(db_connect)
     .then(()=>{
         console.log('App connected  to database');
-        server.listen(port,"0.0.0.0", () => {
+        server.listen(port, () => {
             console.log(`Server is running on port ${port}`);
           });
     })

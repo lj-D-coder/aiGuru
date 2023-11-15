@@ -15,7 +15,9 @@ const usersSchema = mongoose.Schema(
         password:{
             type: String,
         },
-
+        stripeCusId: {
+            type: String,
+        },
         gAuthToken:{
             type: String
         },
