@@ -7,6 +7,6 @@ router.post('/user/queries', ques_ans);
 router.post('/send/feedback', feedback);
 router.post('/create-checkout-session', checkout);
 router.post('/create-portal-session', createSession);
-router.post('/webhook', express.raw({ type: 'application/json' }), stripeWebhook)
+router.post('/stripe-webhook', stripeWebhook);
 
 export default router;
