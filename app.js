@@ -9,10 +9,13 @@ import routes from './routes/route.js';
 import { Server } from 'socket.io';
 import OpenAI from "openai";
 import { streamChat } from './controllers/streamController.js';
+import { stripeWebhook } from './controllers/stripeController.js';
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+app.use('/stripe-webhook', express.raw({ type: 'application/json' }), stripeWebhook);
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
