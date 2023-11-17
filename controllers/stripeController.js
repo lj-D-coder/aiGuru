@@ -37,6 +37,10 @@ export const checkout = async (req, res, next) => {
     cancel_url: `${YOUR_DOMAIN}/cancel.html`,
   });
   console.log(session.id);
+  //saving payment session Id  in database 
+  const updatedData = { session_id : session.id };
+  await Users.updateOne({ customerId }, updatedData,{ upsert: true });
+
   res.redirect(303, session.url);
 };
 
@@ -79,11 +83,7 @@ export const stripeWebhook = (request, response) => {
       const checkoutSessionAsyncPaymentFailed = event.data.object;
       console.log("checkoutSessionAsyncPaymentFailed");
       // Then define and call a function to handle the event checkout.session.async_payment_failed
-      break;
-    case 'checkout.session.async_payment_succeeded':
-      const checkoutSessionAsyncPaymentSucceeded = event.data.object;
-      console.log("checkoutSessionAsyncPaymentSucceeded");
-      // Then define and call a function to handle the event checkout.session.async_payment_succeeded
+      customer
       break;
     case 'checkout.session.completed':
       const checkoutSessionCompleted = event.data.object;
@@ -95,42 +95,41 @@ export const stripeWebhook = (request, response) => {
       console.log("checkoutSessionExpired");
       // Then define and call a function to handle the event checkout.session.expired
       break;
-    case 'subscription_schedule.aborted':
-      const subscriptionScheduleAborted = event.data.object;
-      console.log("subscriptionScheduleAborted")
-      // Then define and call a function to handle the event subscription_schedule.aborted
-      break;
-    case 'subscription_schedule.canceled':
-      const subscriptionScheduleCanceled = event.data.object;
-      console.log("subscriptionScheduleCanceled");
-      // Then define and call a function to handle the event subscription_schedule.canceled
-      break;
-    case 'subscription_schedule.completed':
-      const subscriptionScheduleCompleted = event.data.object;
-      console.log("subscriptionScheduleCompleted");
-      // Then define and call a function to handle the event subscription_schedule.completed
-      break;
-    case 'subscription_schedule.created':
-      const subscriptionScheduleCreated = event.data.object;
-      console.log("subscriptionScheduleCreated");
-      // Then define and call a function to handle the event subscription_schedule.created
-      break;
-    case 'subscription_schedule.expiring':
-      const subscriptionScheduleExpiring = event.data.object;
-      console.log("subscriptionScheduleExpiring");
-      // Then define and call a function to handle the event subscription_schedule.expiring
-      break;
-    case 'subscription_schedule.released':
-      const subscriptionScheduleReleased = event.data.object;
-      console.log("subscriptionScheduleReleased");
-      // Then define and call a function to handle the event subscription_schedule.released
-      break;
-    case 'subscription_schedule.updated':
-      const subscriptionScheduleUpdated = event.data.object;
-      console.log("subscriptionScheduleUpdated");
-      // Then define and call a function to handle the event subscription_schedule.updated
-      break;
-    // ... handle other event types
+    case 'customer.subscription.created':
+      const customer = event.data.object;
+      console.log("customerSubscriptionCreated");
+      console.log(customer.customer);
+      console.log(customer.data.status);
+      console.log(customer.data.subscription)
+
+        // Then define and call a function to handle the event customer.subscription.created
+        break;
+    case 'customer.subscription.deleted':
+      const customerSubscriptionDeleted = event.data.object;
+      console.log("customerSubscriptionDeleted");
+        // Then define and call a function to handle the event customer.subscription.deleted
+        break;
+    case 'customer.subscription.paused':
+      const customerSubscriptionPaused = event.data.object;
+      console.log("customerSubscriptionPaused");
+        // Then define and call a function to handle the event customer.subscription.paused
+        break;
+    case 'customer.subscription.resumed':
+      const customerSubscriptionResumed = event.data.object;
+      console.log("customerSubscriptionResumed");
+        // Then define and call a function to handle the event customer.subscription.resumed
+        break;
+    case 'customer.subscription.trial_will_end':
+      const customerSubscriptionTrialWillEnd = event.data.object;
+      console.log("customerSubscriptionTrialWillEnd");
+        // Then define and call a function to handle the event customer.subscription.trial_will_end
+        break;
+    case 'customer.subscription.updated':
+      const customerSubscriptionUpdated = event.data.object;
+      console.log("customerSubscriptionUpdated");
+        // Then define and call a function to handle the event customer.subscription.updated
+        break;
+      // ... handle other event types
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
