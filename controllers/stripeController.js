@@ -37,8 +37,8 @@ export const checkout = async (req, res, next) => {
   });
   console.log(session.id);
   //saving payment session Id  in database
-  const updatedData = { session_id: session.id };
-  await Users.updateOne({ customerId }, updatedData, { upsert: true });
+  // const updatedData = { session_id: session.id };
+  // await Users.updateOne({ customerId }, updatedData, { upsert: true });
 
   res.redirect(303, session.url);
 };
