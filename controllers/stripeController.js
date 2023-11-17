@@ -95,7 +95,7 @@ export const stripeWebhook = (request, response) => {
       const customer = event.data.object;
       console.log("customerSubscriptionCreated");
       console.log(customer.customer);
-      console.log(customer.items.data[0][subscription]);
+      console.log(customer.items.data[0]["subscription"]);
       console.log(customer.status);
 
       // Then define and call a function to handle the event customer.subscription.created
