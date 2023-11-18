@@ -100,12 +100,8 @@ export const saveGoogleinfo = async (req, res, next) => {
             res.status(200).json({ success: true, JWT_token });
         }
         else {
-            const customer = await stripe.customers.create({
-                name: username,
-                email: email,
-            });
-            
-            const updatedData = { gAuthToken: req.body.gToken,stripeCusId : customer.id, expiry: req.body.expiry };
+
+            const updatedData = { gAuthToken: req.body.gToken, expiry: req.body.expiry };
             const userInfo = await Users.updateOne({ email }, updatedData, { upsert: true });
             console.log(`inside Else block \n ${userInfo}`);
         }
