@@ -39,8 +39,7 @@ export const signup = async (req, res) => {
 
     user.stripeCusId = customer.id;
     user = await user.save();
-
-    console.log(user);
+    console.log("User Sign Up using Password and Email sucessfully")
     return res.status(201).json({ success: true, JWT_token });
   } catch (error) {
     // console.log(error.message);
@@ -62,6 +61,7 @@ export const signin = async (req, res, next) => {
       process.env.JWT_SECRET
     );
     const { password: pass, ...rest } = validUser._doc;
+    console.log("User Sign in using Password and Email sucessfully");
     res.status(200).json({ success: true, JWT_token });
     //.cookie("access_token", token, { httponly: true , maxAge: 24 * 60 * 60 * 1000 })
   } catch (error) {
@@ -99,6 +99,7 @@ export const saveGoogleinfo = async (req, res) => {
         { userId: userInfo._id, email: userInfo.email },
         process.env.JWT_SECRET
       );
+      console.log("New Google Sign in sucessfully");
       res.status(200).json({ success: true, JWT_token });
 
     } else {
@@ -111,6 +112,7 @@ export const saveGoogleinfo = async (req, res) => {
         { userId: checkEmail._id, email: checkEmail.email },
         process.env.JWT_SECRET
       );
+      console.log("Google sign In Token Updated");
       res.status(200).json({ success: true, JWT_token });
     }
     

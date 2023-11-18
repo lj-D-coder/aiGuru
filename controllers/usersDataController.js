@@ -6,13 +6,12 @@ import { errorHandler } from "../utils/error.js";
 
 export const ques_ans = async (req, res, next) => {
     const { userId } = req.body;
-    console.log(req.body);
     try {
         const validUser = await Users.findOne({ _id: userId });
         
         if (!validUser) return next(errorHandler(404, 'User not found!'));
         const userData = await UsersGenData.find({userId: validUser._id}).sort({ createdAt: -1 });
-        console.log(validUser);
+        console.log("Fetching User Q&A");
         res.status(200).json({ success: true, userData });
     } catch (error) {
         next(error);
@@ -38,7 +37,7 @@ export const feedback = async (req, res, next) => {
         if (!validUser) return next(errorHandler(404, 'User not found!'));
         const newFeedback = new Feedback({ userId, email : validUser.email, feedback  });
         const saveFeed = await newFeedback.save();   
-        console.log(saveFeed);
+        console.log("Feedback save succesfully");
         return res.status(201).json({ success:true, saveFeed });  
         
     } catch (error) {
