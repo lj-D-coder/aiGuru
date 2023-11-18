@@ -36,10 +36,25 @@ export const checkout = async (req, res, next) => {
     cancel_url: `${YOUR_DOMAIN}/cancel.html`,
   });
   console.log(session.id);
-  //saving payment session Id  in database
-  // const updatedData = { session_id: session.id };
-  // await Users.updateOne({ customerId }, updatedData, { upsert: true });
+  //saving payment session in database
 
+  const updatedData = {
+    userId: FindUser._id,
+    stripeCusId: customerId,
+    session_id: session.id,
+    subscription_info: {
+      id: 0,
+      status: Free,
+      interval: None,
+      expiryAt: 0,
+    },
+  };
+  const subscr_Info = await SubscriberModel.updateOne(
+    { stripeCusId: customerId },
+    updatedData,
+    { upsert: true }
+  );
+  console.log(subscr_Info);
   res.redirect(303, session.url);
 };
 
@@ -60,7 +75,7 @@ export const createSession = async (req, res) => {
   res.redirect(303, portalSession.url);
 };
 
-export const stripeWebhook = (request, response) => {
+export const stripeWebhook = async (request, response) => {
   // This is your Stripe CLI webhook secret for testing your endpoint locally.
   const endpointSecret = "whsec_g8xr7Yeu5kNwO1cm7yERoeEw32IbiPGV";
   const sig = request.headers["stripe-signature"];
@@ -91,17 +106,34 @@ export const stripeWebhook = (request, response) => {
       console.log("checkoutSessionExpired");
       // Then define and call a function to handle the event checkout.session.expired
       break;
+
+    //case
     case "customer.subscription.created":
       const customer = event.data.object;
-      console.log("customerSubscriptionCreated");
+
       console.log(customer.customer);
-      console.log(customer);
-      console.log("######################")
       console.log(customer.items.data[0]["subscription"]);
       console.log(customer.status);
+      console.log(customer.items.data[0]["plan"]["interval"]);
+      console.log(customer.current_period_end);
 
-      // Then define and call a function to handle the event customer.subscription.created
+      const updatedData = {
+        stripeCusId: customer.customer,
+        subscription_info: {
+          id: customer.items.data[0]["subscription"],
+          status: customer.status,
+          interval: customer.items.data[0]["plan"]["interval"],
+          expiryAt: customer.current_period_end,
+        },
+      };
+      const subscr_Info = await SubscriberModel.updateOne(
+        { stripeCusId: customer.customer },
+        updatedData,
+        { upsert: true }
+      );
+      console.log(subscr_Info);
       break;
+
     case "customer.subscription.deleted":
       const customerSubscriptionDeleted = event.data.object;
       console.log("customerSubscriptionDeleted");
