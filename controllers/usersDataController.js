@@ -14,6 +14,7 @@ export const userProfile = async (req, res, next) => {
         res.status(200).json({
             success: true,
             userId: subscriber_info.userId,
+            username: validUser.username,
             email: validUser.email,
             stripeCusId: subscriber_info.stripeCusId,
             subscription_info : subscriber_info.subscription_info,
