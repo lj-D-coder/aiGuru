@@ -4,6 +4,24 @@ import { Users } from '../models/usersModel.js';
 import { errorHandler } from "../utils/error.js";
 
 
+export const userProfile = async (req, res, next) => {
+    const { userId } = req.body;
+    try {
+        const validUser = await Users.findOne({ _id: userId });
+        if (!validUser) return next(errorHandler(404, 'User not found!'));
+        const subscriber_info = await SubscriberModel.findOne({ stripeCusId: validUser.stripeCusId });
+        res.status(200).json({
+            success: true,
+            userId: subscriber_info.userId,
+            email: validUser.email,
+            stripeCusId: subscriber_info.stripeCusId,
+            subscription_info : subscriber_info.subscription_info,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const ques_ans = async (req, res, next) => {
     const { userId } = req.body;
     try {
