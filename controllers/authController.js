@@ -83,7 +83,7 @@ export const saveGoogleinfo = async (req, res, next) => {
         const checkEmail = await Users.findOne({ email });
         const username = email.split('@')[0];
         if (!checkEmail) {
-            const saveUserInfo = new Users({ username, email, gAuthToken: gToken, expiry });
+            const saveUserInfo = new Users({ username, email, gAuthToken: gToken, stripeCusId: 0, expiry });
             let userInfo = await saveUserInfo.save();
             console.log(userInfo);
             const JWT_token = jwt.sign({ userId: saveUserInfo._id, email: saveUserInfo.email }, process.env.JWT_SECRET);
