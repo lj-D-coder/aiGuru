@@ -81,11 +81,15 @@ export const saveGoogleinfo = async (req, res, next) => {
     const checkEmail = await Users.findOne({ email });
     const username = email.split("@")[0];
     if (!checkEmail) {
+      const customer = await stripe.customers.create({
+        name: username,
+        email: email,
+      });
       const saveUserInfo = new Users({
         username,
         email,
         gAuthToken: gToken,
-        stripeCusId: 0,
+        stripeCusId: customer.id,
         expiry,
       });
       let userInfo = await saveUserInfo.save();
@@ -95,13 +99,6 @@ export const saveGoogleinfo = async (req, res, next) => {
         process.env.JWT_SECRET
       );
 
-      const customer = await stripe.customers.create({
-        name: username,
-        email: email,
-      });
-
-      userInfo.stripeCusId = customer.id;
-      userInfo = await userInfo.save();
       console.log("inside if block \n");
 
       res.status(200).json({ success: true, JWT_token });
