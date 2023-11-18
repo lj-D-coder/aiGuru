@@ -97,6 +97,7 @@ export const saveGoogleinfo = async (req, res, next) => {
                 userInfo = await userInfo.save();
                 
             res.status(200).json({ success: true, JWT_token });  
+            console.log(`inside if block \n ${userInfo}`);
         }
         else {
             const customer = await stripe.customers.create({
@@ -110,8 +111,9 @@ export const saveGoogleinfo = async (req, res, next) => {
             const JWT_token = jwt.sign({ userId: checkEmail._id, email: checkEmail.email }, process.env.JWT_SECRET);
             
             res.status(200).json({ success: true, JWT_token });
+            console.log(`inside Else block \n ${userInfo}`);
         }
-        console.log(userInfo);
+        
         
     } catch (error) {
         //next(errorHandler(500, 'something went wrong!'));
