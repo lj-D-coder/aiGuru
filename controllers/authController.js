@@ -101,8 +101,8 @@ export const saveGoogleinfo = async (req, res) => {
       );
 
       console.log("inside if block \n");
-
       res.status(200).json({ success: true, JWT_token });
+      
     } else {
       const updatedData = {
         gAuthToken: req.body.gToken,
@@ -110,12 +110,13 @@ export const saveGoogleinfo = async (req, res) => {
       };
       await Users.updateOne({ email }, updatedData, { upsert: true });
       console.log("inside Else block");
+      const JWT_token = jwt.sign(
+        { userId: checkEmail._id, email: checkEmail.email },
+        process.env.JWT_SECRET
+      );
+      res.status(200).json({ success: true, JWT_token });
     }
-    const JWT_token = jwt.sign(
-      { userId: checkEmail._id, email: checkEmail.email },
-      process.env.JWT_SECRET
-    );
-    res.status(200).json({ success: true, JWT_token });
+    
   } catch (error) {
     //next(errorHandler(500, 'something went wrong!'));
     console.log(error.message);
