@@ -95,7 +95,7 @@ export const saveGoogleinfo = async (req, res, next) => {
         
             userInfo.stripeCusId = customer.id;
             userInfo = await userInfo.save();
-            console.log(`inside if block \n ${userInfo}`);
+            console.log("inside if block \n");
                 
             res.status(200).json({ success: true, JWT_token });
         }
@@ -103,7 +103,7 @@ export const saveGoogleinfo = async (req, res, next) => {
 
             const updatedData = { gAuthToken: req.body.gToken, expiry: req.body.expiry };
             const userInfo = await Users.updateOne({ email }, updatedData, { upsert: true });
-            console.log(`inside Else block \n ${userInfo}`);
+            console.log("inside Else block");
         }
             const JWT_token = jwt.sign({ userId: checkEmail._id, email: checkEmail.email }, process.env.JWT_SECRET); 
             res.status(200).json({ success: true, JWT_token });
