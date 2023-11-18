@@ -11,7 +11,7 @@ export const checkout = async (req, res, next) => {
 
   console.log(userId);
   const FindUser = await Users.findById(userId);
-  console.log(FindUser);
+  //console.log(FindUser);
   if (!FindUser) return next(errorHandler(404, "User not found!"));
   const customerId = FindUser.stripeCusId;
 

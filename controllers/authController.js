@@ -30,7 +30,6 @@ export const signup = async (req, res) => {
       { userId: user._id, email: email },
       process.env.JWT_SECRET
     );
-    console.log(user);
 
     //creating Stripe Customer Id
     const customer = await stripe.customers.create({
@@ -41,6 +40,7 @@ export const signup = async (req, res) => {
     user.stripeCusId = customer.id;
     user = await user.save();
 
+    console.log(user);
     return res.status(201).json({ success: true, JWT_token });
   } catch (error) {
     // console.log(error.message);
@@ -99,17 +99,14 @@ export const saveGoogleinfo = async (req, res) => {
         { userId: userInfo._id, email: userInfo.email },
         process.env.JWT_SECRET
       );
-
-      console.log("inside if block \n");
       res.status(200).json({ success: true, JWT_token });
-      
+
     } else {
       const updatedData = {
         gAuthToken: req.body.gToken,
         expiry: req.body.expiry,
       };
       await Users.updateOne({ email }, updatedData, { upsert: true });
-      console.log("inside Else block");
       const JWT_token = jwt.sign(
         { userId: checkEmail._id, email: checkEmail.email },
         process.env.JWT_SECRET
