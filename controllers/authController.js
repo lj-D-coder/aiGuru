@@ -93,11 +93,11 @@ export const saveGoogleinfo = async (req, res, next) => {
                 email: email,
                 });
         
-                userInfo.stripeCusId = customer.id;
-                userInfo = await userInfo.save();
-                
-            res.status(200).json({ success: true, JWT_token });  
+            userInfo.stripeCusId = customer.id;
+            userInfo = await userInfo.save();
             console.log(`inside if block \n ${userInfo}`);
+                
+            res.status(200).json({ success: true, JWT_token });
         }
         else {
             const customer = await stripe.customers.create({
@@ -107,13 +107,10 @@ export const saveGoogleinfo = async (req, res, next) => {
             
             const updatedData = { gAuthToken: req.body.gToken,stripeCusId : customer.id, expiry: req.body.expiry };
             const userInfo = await Users.updateOne({ email }, updatedData, { upsert: true });
-
-            const JWT_token = jwt.sign({ userId: checkEmail._id, email: checkEmail.email }, process.env.JWT_SECRET);
-            
-            res.status(200).json({ success: true, JWT_token });
             console.log(`inside Else block \n ${userInfo}`);
         }
-        
+            const JWT_token = jwt.sign({ userId: checkEmail._id, email: checkEmail.email }, process.env.JWT_SECRET); 
+            res.status(200).json({ success: true, JWT_token });
         
     } catch (error) {
         //next(errorHandler(500, 'something went wrong!'));
