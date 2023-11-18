@@ -111,13 +111,6 @@ export const stripeWebhook = async (request, response) => {
     //case
     case "customer.subscription.created":
       const customer = event.data.object;
-
-      console.log(customer.customer);
-      console.log(customer.items.data[0]["subscription"]);
-      console.log(customer.status);
-      console.log(customer.items.data[0]["plan"]["interval"]);
-      console.log(customer.current_period_end);
-
       const updatedData = {
         stripeCusId: customer.customer,
         subscription_info: {
@@ -132,7 +125,7 @@ export const stripeWebhook = async (request, response) => {
         updatedData,
         { upsert: true }
       );
-      console.log(subscr_Info);
+      console.log("Webhook subcription Created");
       break;
 
     case "customer.subscription.deleted":
@@ -155,10 +148,24 @@ export const stripeWebhook = async (request, response) => {
       console.log("customerSubscriptionTrialWillEnd");
       // Then define and call a function to handle the event customer.subscription.trial_will_end
       break;
+    
     case "customer.subscription.updated":
       const customerSubscriptionUpdated = event.data.object;
-      console.log("customerSubscriptionUpdated");
-      // Then define and call a function to handle the event customer.subscription.updated
+      const subs_update = {
+        stripeCusId: customer.customer,
+        subscription_info: {
+          id: customer.items.data[0]["subscription"],
+          status: customer.status,
+          interval: customer.items.data[0]["plan"]["interval"],
+          expiryAt: customer.current_period_end,
+        },
+      };
+      const subscr_update_Info = await SubscriberModel.updateOne(
+        { stripeCusId: customer.customer },
+        updatedData,
+        { upsert: true }
+      );
+      console.log("Webhook subcription updated");
       break;
     // ... handle other event types
     default:
