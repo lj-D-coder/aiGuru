@@ -152,17 +152,17 @@ export const stripeWebhook = async (request, response) => {
     case "customer.subscription.updated":
       const customerSubscriptionUpdated = event.data.object;
       const subs_update = {
-        stripeCusId: customer.customer,
+        stripeCusId: customerSubscriptionUpdated.customer,
         subscription_info: {
-          id: customer.items.data[0]["subscription"],
-          status: customer.status,
-          interval: customer.items.data[0]["plan"]["interval"],
-          expiryAt: customer.current_period_end,
+          id: customerSubscriptionUpdated.items.data[0]["subscription"],
+          status: customerSubscriptionUpdated.status,
+          interval: customerSubscriptionUpdated.items.data[0]["plan"]["interval"],
+          expiryAt: customerSubscriptionUpdated.current_period_end,
         },
       };
       const subscr_update_Info = await SubscriberModel.updateOne(
-        { stripeCusId: customer.customer },
-        updatedData,
+        { stripeCusId: customerSubscriptionUpdated.customer },
+        subs_update,
         { upsert: true }
       );
       console.log("Webhook subcription updated");
