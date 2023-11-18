@@ -2,6 +2,7 @@ import stripePackage from "stripe";
 import dotenv from "dotenv";
 import { errorHandler } from "../utils/error.js";
 import { Users } from "../models/usersModel.js";
+import { SubscriberModel } from "../models/subscribersModel.js";
 dotenv.config();
 
 const stripe = stripePackage(process.env.STRIPE_KEY);
