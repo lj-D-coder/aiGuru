@@ -69,7 +69,7 @@ export const signin = async (req, res, next) => {
   }
 };
 
-export const saveGoogleinfo = async (req, res, next) => {
+export const saveGoogleinfo = async (req, res) => {
   if (!req.body.email || !req.body.gToken || !req.body.expiry) {
     return response.status(400).json({
       message: "send all required feilds: email, gToken, expiry",
@@ -85,6 +85,7 @@ export const saveGoogleinfo = async (req, res, next) => {
         name: username,
         email: email,
       });
+
       const saveUserInfo = new Users({
         username,
         email,
@@ -92,7 +93,7 @@ export const saveGoogleinfo = async (req, res, next) => {
         stripeCusId: customer.id,
         expiry,
       });
-      let userInfo = await saveUserInfo.save();
+      const userInfo = await saveUserInfo.save();
 
       const JWT_token = jwt.sign(
         { userId: userInfo._id, email: userInfo.email },
