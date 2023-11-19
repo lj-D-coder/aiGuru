@@ -9,7 +9,7 @@ dotenv.config();
 
 const stripe = stripePackage(process.env.STRIPE_KEY);
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   try {
     if (!req.body.email || !req.body.password) {
       return res.status(400).json({
@@ -54,13 +54,13 @@ export const signup = async (req, res) => {
       { upsert: true }
     );
     if(!sub_info) return next(errorHandler(404, 'error in adding subscription info'));
-    console.log("User Sign Up using Password and Email sucessfully")
+    console.log("User Sign Up using Password and Email sucessfully");
     return res.status(201).json({ success: true, JWT_token });
   } catch (error) {
-    // console.log(error.message);
+    console.log(error.message);
     // error.keyValue["message"] = "already exist";
-    res.status(200).json(error);
-    //next(errorHandler(400,"bad request"));
+    //res.status(200).json(error);
+    next(errorHandler(400,"something went wrong"));
   }
 };
 
