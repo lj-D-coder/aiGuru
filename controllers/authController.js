@@ -4,6 +4,7 @@ import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 import stripePackage from "stripe";
 import dotenv from "dotenv";
+import { SubscriberModel } from "../models/subscribersModel.js";
 dotenv.config();
 
 const stripe = stripePackage(process.env.STRIPE_KEY);
@@ -17,28 +18,43 @@ export const signup = async (req, res) => {
     }
 
     const { email, password } = req.body;
+    //creating Stripe Customer Id
+    const customer = await stripe.customers.create({
+      name: username,
+      email: email,
+    });
+    if (!customer) return next(errorHandler(404, 'Somthing Went wrong Please Try agian later'));
     const username = email.split("@")[0];
     const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new Users({
       username,
       email,
       password: hashedPassword,
-      stripeCusId: 0,
+      stripeCusId: customer.id,
     });
-    let user = await newUser.save();
+    const user = await newUser.save();
     const JWT_token = jwt.sign(
       { userId: user._id, email: email },
       process.env.JWT_SECRET
     );
 
-    //creating Stripe Customer Id
-    const customer = await stripe.customers.create({
-      name: username,
-      email: email,
-    });
 
-    user.stripeCusId = customer.id;
-    user = await user.save();
+    const subcriptionData = {
+      userId: user._id,
+      stripeCusId: customer.id,
+      session_id: "",
+      subscription_info: {
+        id: "",
+        status: "Free",
+        interval: "None",
+        expiryAt: "",
+      },
+    };
+    await SubscriberModel.updateOne({ stripeCusId: user.stripeCusId },subcriptionData,
+      { upsert: true }
+    );
+
+
     console.log("User Sign Up using Password and Email sucessfully")
     return res.status(201).json({ success: true, JWT_token });
   } catch (error) {
@@ -69,7 +85,7 @@ export const signin = async (req, res, next) => {
   }
 };
 
-export const saveGoogleinfo = async (req, res) => {
+export const saveGoogleinfo = async (req, res, next) => {
   if (!req.body.email || !req.body.gToken || !req.body.expiry) {
     return response.status(400).json({
       message: "send all required feilds: email, gToken, expiry",
@@ -86,6 +102,8 @@ export const saveGoogleinfo = async (req, res) => {
         email: email,
       });
 
+      if (!customer) return next(errorHandler(404, 'Somthing Went wrong Please Try agian later'));
+
       const saveUserInfo = new Users({
         username,
         email,
@@ -100,7 +118,23 @@ export const saveGoogleinfo = async (req, res) => {
         process.env.JWT_SECRET
       );
       console.log("New Google Sign in sucessfully");
-      res.status(200).json({ success: true, JWT_token });
+
+    const subcriptionData = {
+      userId: user._id,
+      stripeCusId: customer.id,
+      session_id: "",
+      subscription_info: {
+        id: "",
+        status: "Free",
+        interval: "None",
+        expiryAt: "",
+      },
+    };
+    await SubscriberModel.updateOne({ stripeCusId: user.stripeCusId },subcriptionData,
+      { upsert: true }
+    );
+      
+    res.status(200).json({ success: true, JWT_token });
 
     } else {
       const updatedData = {
