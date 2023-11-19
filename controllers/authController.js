@@ -18,13 +18,14 @@ export const signup = async (req, res) => {
     }
 
     const { email, password } = req.body;
+    
+    const username = email.split("@")[0];
     //creating Stripe Customer Id
     const customer = await stripe.customers.create({
       name: username,
       email: email,
     });
     if (!customer) return next(errorHandler(404, 'Somthing Went wrong Please Try agian later'));
-    const username = email.split("@")[0];
     const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new Users({
       username,
@@ -120,7 +121,7 @@ export const saveGoogleinfo = async (req, res, next) => {
       console.log("New Google Sign in sucessfully");
 
     const subcriptionData = {
-      userId: user._id,
+      userId: userInfo._id,
       stripeCusId: customer.id,
       session_id: "",
       subscription_info: {
