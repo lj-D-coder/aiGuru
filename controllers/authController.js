@@ -39,7 +39,6 @@ export const signup = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-
     const subcriptionData = {
       userId: user._id,
       stripeCusId: customer.id,
@@ -51,11 +50,10 @@ export const signup = async (req, res) => {
         expiryAt: "0",
       },
     };
-    await SubscriberModel.updateOne({ stripeCusId: user.stripeCusId },subcriptionData,
+    const sub_info = await SubscriberModel.updateOne({ stripeCusId: customer.id },subcriptionData,
       { upsert: true }
     );
-
-
+    if(!sub_info) return next(errorHandler(404, 'error in adding subscription info'));
     console.log("User Sign Up using Password and Email sucessfully")
     return res.status(201).json({ success: true, JWT_token });
   } catch (error) {
@@ -131,10 +129,10 @@ export const saveGoogleinfo = async (req, res, next) => {
         expiryAt: "0",
       },
     };
-    await SubscriberModel.updateOne({ stripeCusId: userInfo.stripeCusId },subcriptionData,
+    const subscriber =await SubscriberModel.updateOne({ stripeCusId: userInfo.stripeCusId },subcriptionData,
       { upsert: true }
     );
-      
+    if (!subscriber) return next(errorHandler(400, 'Error in Adding subscriber info'));  
     res.status(200).json({ success: true, JWT_token });
 
     } else {
