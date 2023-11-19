@@ -44,10 +44,10 @@ export const checkout = async (req, res, next) => {
     stripeCusId: customerId,
     session_id: session.id,
     subscription_info: {
-      id: "",
+      id: "0",
       status: "Free",
-      interval: "None",
-      expiryAt: "",
+      interval: "0",
+      expiryAt: "0",
     },
   };
   const subscr_Info = await SubscriberModel.updateOne(

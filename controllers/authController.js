@@ -43,12 +43,12 @@ export const signup = async (req, res) => {
     const subcriptionData = {
       userId: user._id,
       stripeCusId: customer.id,
-      session_id: "",
+      session_id: "0",
       subscription_info: {
-        id: "",
+        id: "0",
         status: "Free",
-        interval: "None",
-        expiryAt: "",
+        interval: "0",
+        expiryAt: "0",
       },
     };
     await SubscriberModel.updateOne({ stripeCusId: user.stripeCusId },subcriptionData,
@@ -123,12 +123,12 @@ export const saveGoogleinfo = async (req, res, next) => {
     const subcriptionData = {
       userId: userInfo._id,
       stripeCusId: customer.id,
-      session_id: "",
+      session_id: "0",
       subscription_info: {
-        id: "",
+        id: "0",
         status: "Free",
-        interval: "None",
-        expiryAt: "",
+        interval: "0",
+        expiryAt: "0",
       },
     };
     await SubscriberModel.updateOne({ stripeCusId: user.stripeCusId },subcriptionData,
