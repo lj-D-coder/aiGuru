@@ -131,7 +131,7 @@ export const saveGoogleinfo = async (req, res, next) => {
         expiryAt: "0",
       },
     };
-    await SubscriberModel.updateOne({ stripeCusId: user.stripeCusId },subcriptionData,
+    await SubscriberModel.updateOne({ stripeCusId: userInfo.stripeCusId },subcriptionData,
       { upsert: true }
     );
       
