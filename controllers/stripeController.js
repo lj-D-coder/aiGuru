@@ -78,7 +78,7 @@ export const createSession = async (req, res) => {
 
 export const stripeWebhook = async (request, response) => {
   // This is your Stripe CLI webhook secret for testing your endpoint locally.
-  const endpointSecret = "whsec_g8xr7Yeu5kNwO1cm7yERoeEw32IbiPGV";
+  const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
   const sig = request.headers["stripe-signature"];
 
   let event;
