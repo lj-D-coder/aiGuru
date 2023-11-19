@@ -18,7 +18,6 @@ const subscriber = mongoose.Schema(
         subscription_info: {
             id: {
                 type: String,
-                unique: true,
             },
             status: {
                 type: String,
