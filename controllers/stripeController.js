@@ -33,8 +33,8 @@ export const checkout = async (req, res, next) => {
       },
     ],
     mode: "subscription",
-    success_url: `${YOUR_DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${YOUR_DOMAIN}/cancel.html`,
+    // success_url: `${YOUR_DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+    // cancel_url: `${YOUR_DOMAIN}/cancel.html`,
   });
   console.log(session.id);
   //saving payment session in database
