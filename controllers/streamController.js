@@ -38,7 +38,7 @@ export const streamChat = async (socket, param) => {
       messages: [
         {
           role: "system",
-          content: "You are an AI Tutor: Give clear \n- Avoid repetition \n-  be concise answer",
+          content: "You are an AI Tutor: Give clear concise answer and avoid repetition",
         },
         {
           role: "user",
