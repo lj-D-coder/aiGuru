@@ -1,53 +1,146 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Subscribe to a cool new product</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://js.stripe.com/v3/"></script>
-  </head>
-  <body>
-    <section>
-      <div class="product">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px" height="16px" viewBox="0 0 14 16" version="1.1">
-            <defs/>
-            <g id="Flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <g id="0-Default" transform="translate(-121.000000, -40.000000)" fill="#E184DF">
-                    <path d="M127,50 L126,50 C123.238576,50 121,47.7614237 121,45 C121,42.2385763 123.238576,40 126,40 L135,40 L135,56 L133,56 L133,42 L129,42 L129,56 L127,56 L127,50 Z M127,48 L127,42 L126,42 C124.343146,42 123,43.3431458 123,45 C123,46.6568542 124.343146,48 126,48 L127,48 Z" id="Pilcrow"/>
-                </g>
-            </g>
-        </svg>
-        <div class="description">
-          <h3>Starter plan</h3>
-          <h5>₹100.00 / month</h5>
-        </div>
-      </div>
-      <form id="subsription" action="/create-checkout-session" method="POST">
-        <!-- Add a hidden field with the lookup_key of your Price -->
-        <input type="hidden" name="lookup_key" value="qsprime123" />
-        <button id="checkout-and-portal-button" onclick="submitForm()" type="submit">Checkout</button>
-      </form>
-    </section>
-    <script>
-      function submitForm() {
-      const form = document.getElementById('subsription');
-      // Get URL parameters
-      const urlParams = new URLSearchParams(window.location.search);
-
-      urlParams.forEach((value, key) => {
-        // Check if the input element with the same name already exists
-        if (!document.getElementById(key)) {
-          // Create a new input element
-          const inputElement = document.createElement('input');
-          inputElement.type = 'hidden';
-          inputElement.id = key;
-          inputElement.name = key;
-          inputElement.value = value;
-
-          // Append the input element to the form
-          form.appendChild(inputElement);
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap");
+        body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Play", sans-serif;
         }
-      });
+
+        .tab-container {
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px; /* You can adjust the max-width as needed */
+        }
+
+        .tab-button {
+            transition: background-color 0.4s ease, color 0.4s ease, transform 0.4s ease;
+        }
+
+        .tab-button:hover {
+            background-color: #4a90e2;
+            color: #fff;
+            transform: scale(1.05);
+        }
+    </style>
+    <title>Pill Tab Navigation</title>
+</head>
+<body class="bg-gray-100">
+
+<div class="tab-container">
+    <h1 class="flex flex-col items-center my-8 text-4xl font-extrabold">Plans & Pricing</h1>
+
+
+    <!-- Tabs -->
+    <div class="flex m-2">
+        <button class="w-1/3 py-2 px-4 bg-gray-300 focus:outline-none active-tab tab-button" data-tab="daily">Daily</button>
+        <div class="mx-0.5"></div>
+        <button class="w-1/3 py-2 px-4 bg-gray-300 focus:outline-none tab-button" data-tab="weekly">Weekly</button>
+        <div class="mx-0.5"></div>
+        <button class="w-1/3 py-2 px-4 bg-gray-300 focus:outline-none tab-button" data-tab="monthly">Monthly</button>
+    </div>
+
+    <!-- Content -->
+    <div class="p-4">
+        <!-- Content for Daily -->
+        <div class="m-1">
+
+          <div class="tab-content" id="daily">
+            <p>Subscription Price: $19.99</p>
+            <form id="subscription-daily" action="https://submit.example.com" method="post" class="text-center">
+                <input type="hidden" name="subscriptionType" value="Daily">
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-2 tab-button" onclick="submitForm('subscription-daily')">Subscribe</button>
+            </form>
+        </div>
+
+        </div>
+        
+
+        <!-- Content for Weekly -->
+        <div class="hidden tab-content" id="weekly">
+            <p>Subscription Price: $29.99</p>
+            <form id="subscription-weekly" action="https://submit.example.com" method="post" class="text-center">
+                <input type="hidden" name="subscriptionType" value="Weekly">
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-2 tab-button" onclick="submitForm('subscription-weekly')">Subscribe</button>
+            </form>
+        </div>
+
+        <!-- Content for Monthly -->
+        <div class="hidden tab-content" id="monthly">
+            <p>Subscription Price: $39.99</p>
+            <form id="subscription-monthly" action="https://submit.example.com" method="post" class="text-center">
+                <input type="hidden" name="subscriptionType" value="Monthly">
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-2 tab-button" onclick="submitForm('subscription-monthly')">Subscribe</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll("[data-tab]");
+
+        const defaultTabId = tabs[0].dataset.tab;
+        const defaultTabContent = document.getElementById(defaultTabId);
+
+        tabs[0].classList.add("active-tab", "bg-blue-500", "text-white");
+        defaultTabContent.classList.remove("hidden");
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener("click", function () {
+                const tabId = this.dataset.tab;
+                const tabContents = document.querySelectorAll(".tab-content");
+                const activeTabs = document.querySelectorAll(".active-tab");
+
+                activeTabs.forEach(function (activeTab) {
+                    activeTab.classList.remove("active-tab");
+                });
+
+                tabs.forEach(function (tab) {
+                    tab.classList.remove("bg-blue-500", "text-white");
+                    tab.classList.add("bg-gray-300", "hover:bg-gray-400");
+                });
+
+                this.classList.add("active-tab", "bg-blue-500", "text-white");
+
+                tabContents.forEach(function (content) {
+                    content.classList.add("hidden");
+                });
+
+                document.getElementById(tabId).classList.remove("hidden");
+            });
+        });
+    });
+
+    function submitForm(formId) {
+        const form = document.getElementById(formId);
+        const urlParams = new URLSearchParams(window.location.search);
+
+        urlParams.forEach((value, key) => {
+            const existingInput = form.querySelector(`[name="${key}"]`);
+
+            if (!existingInput) {
+                const inputElement = document.createElement('input');
+                inputElement.type = 'hidden';
+                inputElement.name = key;
+                inputElement.value = value;
+                form.appendChild(inputElement);
+            } else {
+                existingInput.value = value;
+            }
+        });
     }
-    </script>
-  </body>
+</script>
+</body>
 </html>
