@@ -17,8 +17,6 @@
         }
 
         .tab-container {
-            border: 2px solid #ccc;
-            border-radius: 8px;
             overflow: hidden;
             width: 100%;
             max-width: 400px; /* You can adjust the max-width as needed */
@@ -39,11 +37,10 @@
 <body class="bg-gray-100">
 
 <div class="tab-container">
+    <img src="/assets/logo.png" alt="logo" class="text-center mx-auto">
     <h1 class="flex flex-col items-center my-8 text-4xl font-extrabold">Plans & Pricing</h1>
-
-
     <!-- Tabs -->
-    <div class="flex m-2">
+    <div class="flex m-6">
         <button class="w-1/3 py-2 px-4 bg-gray-300 focus:outline-none active-tab tab-button" data-tab="daily">Daily</button>
         <div class="mx-0.5"></div>
         <button class="w-1/3 py-2 px-4 bg-gray-300 focus:outline-none tab-button" data-tab="weekly">Weekly</button>
@@ -54,34 +51,53 @@
     <!-- Content -->
     <div class="p-4">
         <!-- Content for Daily -->
-        <div class="m-1">
-
-          <div class="tab-content" id="daily">
-            <p>Subscription Price: $19.99</p>
+          <div class="tab-content m-2 md:w-auto p-6 min-h-full flex flex-col items-center text-center rounded-lg shadow-2xl bg-gray-900 flex-wrap text-gray-100" id="daily">
+            <p class="items-center my-2 pb-4 text-4xl font-bold shadow-2xl">₹5.00</p>
+            <ul class="divide-y-2 divide-blue-700">
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">1 Day Validity</li>
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">unlimited & Ad Free</li>
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Streaming Answers</li>
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Long Answers Support</li>
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Additional features</li>
+                <li></li>
+            </ul>
             <form id="subscription-daily" action="https://submit.example.com" method="post" class="text-center">
-                <input type="hidden" name="subscriptionType" value="Daily">
-                <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-2 tab-button" onclick="submitForm('subscription-daily')">Subscribe</button>
+                <input type="hidden" name="lookup_key" value="daily-pr-5">
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-8 tab-button" onclick="submitForm('subscription-daily')">Subscribe</button>
             </form>
-        </div>
-
-        </div>
+          </div>
         
 
         <!-- Content for Weekly -->
-        <div class="hidden tab-content" id="weekly">
-            <p>Subscription Price: $29.99</p>
-            <form id="subscription-weekly" action="https://submit.example.com" method="post" class="text-center">
-                <input type="hidden" name="subscriptionType" value="Weekly">
-                <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-2 tab-button" onclick="submitForm('subscription-weekly')">Subscribe</button>
-            </form>
-        </div>
-
+            <div class="hidden tab-content m-2 md:w-auto p-6 min-h-full flex flex-col items-center text-center rounded-lg shadow-2xl bg-gray-900 flex-wrap text-gray-100" id="weekly">
+                <p class="items-center my-2 pb-4 text-4xl font-bold shadow-2xl">₹25.00</p>
+                <ul class="divide-y-2 divide-blue-700">
+                    <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">7 Day Validity</li>
+                    <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">unlimited & Ad Free</li>
+                    <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Streaming Answers</li>
+                    <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Long Answers Support</li>
+                    <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Additional features</li>
+                    <li></li>
+                </ul>
+                <form id="subscription-weekly" action="https://submit.example.com" method="post" class="text-center">
+                    <input type="hidden" name="lookup_key" value="weekly-pr-25">
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-8 tab-button" onclick="submitForm('subscription-weekly')">Subscribe</button>
+                </form>
+            </div>
         <!-- Content for Monthly -->
-        <div class="hidden tab-content" id="monthly">
-            <p>Subscription Price: $39.99</p>
+        <div class="hidden tab-content m-2 md:w-auto p-6 min-h-full flex flex-col items-center text-center rounded-lg shadow-2xl bg-gray-900 flex-wrap text-gray-100" id="monthly">
+            <p class="items-center my-2 pb-4 text-4xl font-bold shadow-2xl">₹100.00</p>
+            <ul class="divide-y-2 divide-blue-700">
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">1 Month Validity</li>
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">unlimited & Ad Free</li>
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Streaming Answers</li>
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Long Answers Support</li>
+                <li class="text-lg list-none border-b border-blue-700 pl-0 py-2">Additional features</li>
+                <li></li>
+            </ul>
             <form id="subscription-monthly" action="https://submit.example.com" method="post" class="text-center">
-                <input type="hidden" name="subscriptionType" value="Monthly">
-                <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-2 tab-button" onclick="submitForm('subscription-monthly')">Subscribe</button>
+                <input type="hidden" name="lookup_key" value="monthly-pr-100">
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-8 tab-button" onclick="submitForm('subscription-monthly')">Subscribe</button>
             </form>
         </div>
     </div>
