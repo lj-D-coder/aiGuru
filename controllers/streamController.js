@@ -38,7 +38,7 @@ export const streamChat = async (socket, param) => {
       messages: [
         {
           role: "system",
-          content: "You are an AI Tutor: Give clear concise answer and avoid repetition",
+          content: "AI Tutor Instructions: Give clear, precise answers .\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.",
         },
         {
           role: "user",
@@ -47,7 +47,7 @@ export const streamChat = async (socket, param) => {
       ],
       model: "gpt-3.5-turbo",
       stream: true,
-      max_tokens: 300,
+      max_tokens: 500,
     });
 
     let arr_answer = [];
@@ -75,6 +75,6 @@ export const streamChat = async (socket, param) => {
     completion = null; // resetting socket data
 
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };

@@ -9,12 +9,10 @@ const stripe = stripePackage(process.env.STRIPE_KEY);
 const YOUR_DOMAIN = process.env.YOUR_DOMAIN;
 export const checkout = async (req, res, next) => {
   let userId = req.body.userId;
-
-  console.log(userId);
-  const FindUser = await Users.findById(userId);
+  const getUser = await Users.findById(userId);
   //console.log(FindUser);
-  if (!FindUser) return next(errorHandler(404, "User not found!"));
-  const customerId = FindUser.stripeCusId;
+  if (!getUser) return next(errorHandler(404, "User not found!"));
+  const customerId = getUser.stripeCusId;
 
   const prices = await stripe.prices.list({
     lookup_keys: [req.body.lookup_key],
@@ -40,7 +38,7 @@ export const checkout = async (req, res, next) => {
   //saving payment session in database
 
   const updatedData = {
-    userId: FindUser._id,
+    userId: getUser._id,
     stripeCusId: customerId,
     session_id: session.id,
     subscription_info: {
@@ -55,26 +53,29 @@ export const checkout = async (req, res, next) => {
     updatedData,
     { upsert: true }
   );
-  console.log(subscr_Info);
+  console.log("Subcription Process initated");
   res.redirect(303, session.url);
 };
 
-export const createSession = async (req, res) => {
-  // For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
-  // Typically this is stored alongside the authenticated user in your database.
-  const { session_id } = req.body;
-  const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
-  // This is the url to which the customer will be redirected when they are done
-  // managing their billing with the portal.
-  const returnUrl = YOUR_DOMAIN;
-
-  const portalSession = await stripe.billingPortal.sessions.create({
-    customer: checkoutSession.customer,
+export const createSession = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    console.log(`this is user Id from params ${userId}`);
+    const findUser = await Users.findById(userId);
+    if (!findUser) return next(errorHandler(404, "User not found!"));
+    const customerId = findUser.stripeCusId;
+    const returnUrl = YOUR_DOMAIN;
+    const portalSession = await stripe.billingPortal.sessions.create({
+    customer: customerId,
     return_url: returnUrl,
   });
-
   res.redirect(303, portalSession.url);
+    
+  } catch (error) {
+    console.log(error);
+  }
 };
+
 
 export const stripeWebhook = async (request, response) => {
   // This is your Stripe CLI webhook secret for testing your endpoint locally.
