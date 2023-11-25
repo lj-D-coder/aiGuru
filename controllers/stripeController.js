@@ -60,9 +60,8 @@ export const checkout = async (req, res, next) => {
 export const createSession = async (req, res, next) => {
   try {
     const userId = req.body.userId;
-    console.log(`this is user Id from params ${userId}`);
     const findUser = await Users.findById(userId);
-    if (!findUser) return next(errorHandler(404, "User not found!"));
+    if (!findUser){ return next(errorHandler(404, "User not found!"))};
     const customerId = findUser.stripeCusId;
     const portalSession = await stripe.billingPortal.sessions.create({
     customer: customerId,
