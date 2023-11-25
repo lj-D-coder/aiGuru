@@ -59,7 +59,7 @@ export const checkout = async (req, res, next) => {
 
 export const createSession = async (req, res, next) => {
   try {
-    const userId = req.params.userId;
+    const userId = req.body.userId;
     console.log(`this is user Id from params ${userId}`);
     const findUser = await Users.findById(userId);
     if (!findUser) return next(errorHandler(404, "User not found!"));
