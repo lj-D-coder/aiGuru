@@ -68,7 +68,8 @@ export const createSession = async (req, res, next) => {
     customer: customerId,
     return_url: `${YOUR_DOMAIN}/success.html`,
   });
-  res.redirect(303, portalSession.url);
+    //res.redirect(303, portalSession.url);
+    return res.status(200).json({ success: true, manageUrl: portalSession.url });
     
   } catch (error) {
     console.log(error);
