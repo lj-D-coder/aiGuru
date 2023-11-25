@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Manage Subscription</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    <section>
+      <form id="manage_subsription" action="/create-customer-portal-session" method="POST">
+        <!-- Script will insert a input value here -->
+
+        <button id="checkout-and-portal-button" onclick="submitForm()" type="submit">Checkout</button>
+      </form>
+    </section>
+    <script>
+      function submitForm() {
+      const form = document.getElementById('manage_subsription');
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+
+      urlParams.forEach((value, key) => {
+        // Check if the input element with the same name already exists
+        if (!document.getElementById(key)) {
+          // Create a new input element
+          const inputElement = document.createElement('input');
+          inputElement.type = 'hidden';
+          inputElement.id = key;
+          inputElement.name = key;
+          inputElement.value = value;
+
+          // Append the input element to the form
+          form.appendChild(inputElement);
+        }
+      });
+    }
+    </script>
+  </body>
+</html>
