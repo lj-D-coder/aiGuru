@@ -64,10 +64,9 @@ export const createSession = async (req, res, next) => {
     const findUser = await Users.findById(userId);
     if (!findUser) return next(errorHandler(404, "User not found!"));
     const customerId = findUser.stripeCusId;
-    const returnUrl = YOUR_DOMAIN;
     const portalSession = await stripe.billingPortal.sessions.create({
     customer: customerId,
-    return_url: returnUrl,
+    return_url: `${YOUR_DOMAIN}/success.html`,
   });
   res.redirect(303, portalSession.url);
     
