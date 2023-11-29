@@ -10,8 +10,8 @@ const YOUR_DOMAIN = process.env.YOUR_DOMAIN;
 export const checkout = async (req, res, next) => {
   let userId = req.body.userId;
   const getUser = await Users.findById(userId);
-  //console.log(FindUser);
-  if (!getUser) return next(errorHandler(404, "User not found!"));
+  
+  if (!getUser) { return next(errorHandler(404, "User not found!")) };
   const customerId = getUser.stripeCusId;
 
   const prices = await stripe.prices.list({
@@ -19,7 +19,6 @@ export const checkout = async (req, res, next) => {
     expand: ["data.product"],
   });
 
-  console.log(prices);
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     billing_address_collection: "auto",
@@ -34,9 +33,8 @@ export const checkout = async (req, res, next) => {
     success_url: `${YOUR_DOMAIN}/success.html?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${YOUR_DOMAIN}/cancel.html`,
   });
-  console.log(session.id);
-  //saving payment session in database
 
+  //saving payment session in database
   const updatedData = {
     userId: getUser._id,
     stripeCusId: customerId,
