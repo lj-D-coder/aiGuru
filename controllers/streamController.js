@@ -47,7 +47,7 @@ export const streamChat = async (socket, param) => {
       ],
       model: "gpt-4-turbo",
       stream: true,
-      max_tokens: 1000,
+      max_tokens: 5000,
       // Set max-token based on user free/premium
     });
 
