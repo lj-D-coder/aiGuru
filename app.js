@@ -32,7 +32,7 @@ const db_connect = process.env.DB_CONNECT;
 
 
 
-//sockeet IO
+//socket IO
 io.on('connection', (socket) => {
     console.log('user connected');
     console.log(socket.id, "has joined");

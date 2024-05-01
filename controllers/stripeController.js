@@ -123,7 +123,7 @@ export const stripeWebhook = async (request, response) => {
         updatedData,
         { upsert: true }
       );
-      console.log("Webhook subcription Created");
+      console.log("Webhook subscription Created");
       break;
 
     case "customer.subscription.deleted":
