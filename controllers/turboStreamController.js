@@ -33,12 +33,12 @@ export const turboStreamChat = async (socket, param) => {
         {
           role: "system",
           content:
-            "AI Tutor Instructions: Give clear, precise answers .\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.",
+            "AI Tutor Instructions: Give clear, precise answers or solve.\n- assist students writing improvement and problem solving\n- Structure long answers\n- Avoid repetition.\n- be concise.",
         },
         {
           role: "user",
           content: [
-            { type: "text", text: `What's in this image? ${filter}` },
+            { type: "text", text: `Analyze this image if is maths problem solve, if not answer the question? ${filter}` },
             {
               type: "image_url",
               image_url: {
