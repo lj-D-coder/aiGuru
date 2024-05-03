@@ -34,9 +34,20 @@ export const ask_queries = async (req, res) => {
           content:
             "AI Tutor Instructions: Give clear, precise answers .\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.",
         },
-        { role: "user", content: userMessage },
+        {
+          role: "user",
+          content: [
+            { type: "text", text: `What's in this image? ${filter}` },
+            {
+              type: "image_url",
+              image_url: {
+                url: req.body.base64Image,
+              },
+            },
+          ],
+        },
       ],
-      model: "gpt-3.5-turbo",
+      model: "gpt-4-turbo",
     });
     console.log(`Answer: ${chat.choices[0].message.content}`);
     res

@@ -1,5 +1,5 @@
 import express from 'express';
-import {ask_queries} from '../controllers/askQueriesController.js';
+import { ask_queries } from '../controllers/askQueriesController.js';
 
 
 const router = express.Router();

@@ -8,7 +8,8 @@ import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
 import OpenAI from "openai";
-import { streamChat } from './controllers/streamController.js';
+// import { streamChat } from './controllers/streamController.js';
+import { turboStreamChat } from './controllers/turboStreamController.js';
 import { stripeWebhook } from './controllers/stripeController.js';
 
 const app = express();
@@ -37,7 +38,7 @@ io.on('connection', (socket) => {
     console.log('user connected');
     console.log(socket.id, "has joined");
     socket.on('data-stream', (param) => {
-        streamChat(socket, param);
+        turboStreamChat(socket, param);
     })
 });
 
@@ -48,7 +49,7 @@ app.use('/auth',authRouter);
 app.use('/',routes);
 
 
-// Erron handling
+// Error handling
 app.use((err, req, res, next) =>{
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
