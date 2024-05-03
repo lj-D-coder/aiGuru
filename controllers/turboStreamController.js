@@ -33,7 +33,7 @@ export const turboStreamChat = async (socket, param) => {
         {
           role: "system",
           content:
-            "AI Tutor Instructions: Give clear, precise answers or solve.\n- assist students writing improvement and problem solving\n- Structure long answers\n- Avoid repetition.\n- be concise.",
+            "AI Tutor Instructions: Give clear, precise answers or solve.\n- assist students writing improvement and problem solving\n- Structure long answers\n- Avoid repetition.\n- be concise.\n if its math problem return compatible format for flutter_tex based on latex",
         },
         {
           role: "user",
@@ -70,7 +70,7 @@ export const turboStreamChat = async (socket, param) => {
 
     const newUserData = {
       userId: data.userId,
-      question: userMessage,
+      question: "Question",
       answers: answer,
     };
     await UsersGenData.create(newUserData);
