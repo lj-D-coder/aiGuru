@@ -60,14 +60,15 @@ export const turboStreamChat = async (socket, param) => {
       if (message === undefined) {
         socket.disconnect(console.log("socket disconnected"));
       }
+
       arr_answer.push(message);
       socket.emit("answer-stream", `${message}`);
+      const tokenList = encoder.encode(message);
+      completionTokens += tokenList.length;
     }
 
     const answer = arr_answer.join("");
     console.log(answer);
-    const tokenList = encoder.encode("answer");
-    completionTokens += tokenList.length;
     console.log(`Completion token usage: ${completionTokens}`);
     encoder.free();
     const newUserData = {
