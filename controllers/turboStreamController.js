@@ -50,7 +50,6 @@ export const turboStreamChat = async (socket, param) => {
       ],
       model: "gpt-4-turbo",
       stream: true,
-      temperature: 0.2,
       // Set max-token based on user free/premium
     });
 
