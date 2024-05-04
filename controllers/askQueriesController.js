@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 dotenv.config();
 import { UsersGenData } from "../models/usersGeneratedData.js";
+import hitCounter from '../utils/counter.js'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -67,7 +68,8 @@ export const ask_queries = async (req, res) => {
       answers: chat.choices[0].message.content,
     };
     const user = await UsersGenData.create(newUserData);
-    console.log(user);
+    var count = await hitCounter("65bbae0ef201573df4ed646f");
+    console.log(`Total Api Hit count: ${count}`);
   } catch (error) {
     console.error(error);
     res

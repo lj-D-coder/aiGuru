@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import { UsersGenData } from "../models/usersGeneratedData.js";
+import hitCounter from '../utils/counter.js'
 
 dotenv.config();
 
@@ -72,6 +73,8 @@ export const turboStreamChat = async (socket, param) => {
       answers: answer,
     };
     await UsersGenData.create(newUserData);
+    var count = await hitCounter("65bbae0ef201573df4ed646f");
+    console.log(`Total Api Hit count: ${count}`);
     completion = null; // resetting socket data
   } catch (error) {
     console.log(error);
