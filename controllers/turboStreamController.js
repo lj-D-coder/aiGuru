@@ -37,7 +37,7 @@ export const turboStreamChat = async (socket, param) => {
         {
           role: "user",
           content: [
-            { type: "text", text: `If is maths then write MATHS in the beginning and solve it accurately or else just answer it accurately. ${filter}` },
+            { type: "text", text: `If it is maths problem write MATHS (high priority) in the beginning and solve it accurately or else just answer it accurately. ${filter}` },
             {
               type: "image_url",
               image_url: {
