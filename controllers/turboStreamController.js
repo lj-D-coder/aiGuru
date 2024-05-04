@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import { UsersGenData } from "../models/usersGeneratedData.js";
-import chalk from "chalk";
 
 dotenv.config();
 
@@ -38,7 +37,7 @@ export const turboStreamChat = async (socket, param) => {
         {
           role: "user",
           content: [
-            { type: "text", text: `Analyze this image if is maths problem solve, if not answer the question? ${filter}` },
+            { type: "text", text: `If is maths then say type = maths and solve it accurately or else just answer it accurately? ${filter} in the return format add question and answer flag` },
             {
               type: "image_url",
               image_url: {
@@ -66,7 +65,6 @@ export const turboStreamChat = async (socket, param) => {
 
     const answer = arr_answer.join("");
     console.log(answer);
-    console.log(chalk.blue(line).toString());
 
     const newUserData = {
       userId: data.userId,
