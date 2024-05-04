@@ -32,12 +32,12 @@ export const turboStreamChat = async (socket, param) => {
         {
           role: "system",
           content:
-            "AI Tutor Instructions: Give clear, precise answers or solve.\n- assist students writing improvement and problem solving\n- Structure long answers\n- Avoid repetition.\n- be concise.\n if its math problem return compatible format for flutter_tex based on latex",
+            "AI Tutor Instructions: Give clear, precise answers or solve.\n- assist students writing improvement and problem solving\n- Structure long answers\n- Avoid repetition.\n- be concise.\n if its math problem return compatible format for flutter_tex based on latex \n If it is maths problem write MATHS in the beginning",
         },
         {
           role: "user",
           content: [
-            { type: "text", text: `If it is maths problem write MATHS (high priority) in the beginning and solve it accurately or else just answer it accurately. ${filter}` },
+            { type: "text", text: `Analyze this image if is maths problem solve it accurately, if not answer the question accurately? ${filter}` },
             {
               type: "image_url",
               image_url: {
