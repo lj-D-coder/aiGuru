@@ -67,11 +67,9 @@ export const turboStreamChat = async (socket, param) => {
         // Your code here
         const tokenList = encoder.encode(message);
         completionTokens += tokenList.length;
-    } catch (error) {
-        console.error('An error occurred:', error);
-    }
-      
-     
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
     }
 
     const answer = arr_answer.join("");
