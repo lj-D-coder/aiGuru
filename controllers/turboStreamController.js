@@ -1,7 +1,11 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import { UsersGenData } from "../models/usersGeneratedData.js";
-import hitCounter from '../utils/counter.js'
+import hitCounter from "../utils/counter.js";
+import { Tiktoken } from "tiktoken/lite";
+import { load } from "tiktoken/load";
+import models from "tiktoken/model_to_encoding.json" assert { type: "json" };
+import registry from "../node_modules/tiktoken/registry.json" assert { type: "json" };
 
 dotenv.config();
 
@@ -13,18 +17,11 @@ const openai = new OpenAI({
 
 export const turboStreamChat = async (socket, param) => {
   let data = param;
-  console.log(data);
   const base64Image = data.base64Image;
-  var filter = "";
+  const model = await load(registry[models["gpt-4-turbo"]]);
+  const encoder = new Tiktoken(model.bpe_ranks, model.special_tokens, model.pat_str);
 
-  if (data.filters["summarize"]) {
-    filter = data.filters["marks"] === 0 ? "summarize" : `summarize in ${data.filters["marks"]} marks`;
-  } else if (data.filters["explainToKid"]) {
-    filter =
-      data.filters["marks"] === 0 ? "explain to 5 years old" : `explain to 5 years old ${data.filters["marks"]} marks`;
-  } else {
-    filter = data.filters["marks"] > 0 ? `in ${data.filters["marks"]} marks` : "";
-  }
+  let completionTokens = 0;
 
   // requesting chat gpt response
   try {
@@ -33,12 +30,15 @@ export const turboStreamChat = async (socket, param) => {
         {
           role: "system",
           content:
-            "AI Tutor Instructions: Give clear, precise answers or solve.\n- assist students writing improvement and problem solving\n- Structure long answers\n- Avoid repetition.\n- be concise.\n if its math problem return compatible format for flutter_tex based on latex \n If it is maths problem write MATHS in the beginning",
+            "AI Tutor Instructions: Give clear, precise answers or solve.\n- assist students writing improvement and problem solving\n- Structure long answers\n- Avoid repetition.\n- be concise.\n if its math problem return compatible format for flutter_tex based on latex \n",
         },
         {
           role: "user",
           content: [
-            { type: "text", text: `Analyze this image if is maths problem solve it accurately, if not answer the question accurately? ${filter}` },
+            {
+              type: "text",
+              text: "Analyze this image if is maths problem solve it accurately, if not answer the question accurately?",
+            },
             {
               type: "image_url",
               image_url: {
@@ -50,7 +50,7 @@ export const turboStreamChat = async (socket, param) => {
       ],
       model: "gpt-4-turbo",
       stream: true,
-      max_tokens: 2000,
+      temperature: 0.2,
       // Set max-token based on user free/premium
     });
 
@@ -66,10 +66,13 @@ export const turboStreamChat = async (socket, param) => {
 
     const answer = arr_answer.join("");
     console.log(answer);
-
+    const tokenList = encoder.encode("answer");
+    completionTokens += tokenList.length;
+    console.log(`Completion token usage: ${completionTokens}`);
+    encoder.free();
     const newUserData = {
       userId: data.userId,
-      question: "Question",
+      question: "Recent Scan",
       answers: answer,
     };
     await UsersGenData.create(newUserData);

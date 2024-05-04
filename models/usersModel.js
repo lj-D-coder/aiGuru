@@ -23,6 +23,10 @@ const usersSchema = mongoose.Schema(
         },
         expiry: {
             type: String
+        },
+        newUser: {
+            type: Boolean,
+            default: true,
         }
 
     },
