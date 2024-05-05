@@ -18,6 +18,7 @@ const openai = new OpenAI({
 
 export const turboStreamChat = async (socket, param) => {
   let data = param;
+  console.log(data);
   const base64Image = data.base64Image;
   const model = await load(registry[models["gpt-4-turbo"]]);
   const encoder = new Tiktoken(model.bpe_ranks, model.special_tokens, model.pat_str);
@@ -87,9 +88,9 @@ export const turboStreamChat = async (socket, param) => {
     const answer = arr_answer.join("");
     //console.log(answer);
     console.log(`Completion token usage: ${completionTokens}`);
-    if (completionTokens > 0 && userId) { 
+    if (completionTokens > 0 && data.userId) { 
       const tokenDeduct = await SubscriberModel.findOneAndUpdate(
-        { userId },
+        { userId: data.userId },
         { $inc: { 'subscription_info.token': -completionTokens } },
         { upsert: true }
       );
