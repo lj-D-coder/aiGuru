@@ -25,6 +25,7 @@ const subscriber = mongoose.Schema(
             token: {
                 type: Number,
                 default: 3000,
+                require: true,
             },
             interval: {
                 type: String,

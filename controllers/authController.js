@@ -46,6 +46,7 @@ export const signup = async (req, res, next) => {
       subscription_info: {
         id: "0",
         status: "Free",
+        token: 3000,
         interval: "0",
         expiryAt: "0",
       },
@@ -125,6 +126,7 @@ export const saveGoogleinfo = async (req, res, next) => {
       subscription_info: {
         id: "0",
         status: "Free",
+        token: 3000,
         interval: "0",
         expiryAt: "0",
       },
