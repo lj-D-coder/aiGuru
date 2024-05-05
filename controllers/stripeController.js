@@ -39,18 +39,18 @@ export const checkout = async (req, res, next) => {
     userId: getUser._id,
     stripeCusId: customerId,
     session_id: session.id,
-    subscription_info: {
-      id: "0",
-      status: "Free",
-      interval: "0",
-      expiryAt: "0",
-    },
   };
   
-  const subscr_Info = await SubscriberModel.updateOne(
+  const initializeSub = await SubscriberModel.updateOne(
     { stripeCusId: customerId },
     {
       $set: updatedData,
+      $set: {
+        "subscription_info.id": "0",
+        "subscription_info.status": "Free",
+        "subscription_info.interval": "0",
+        "subscription_info.expiryAt": "0",
+      },
       $inc: { "subscription_info.token": 0 }
     },
     { upsert: true }
