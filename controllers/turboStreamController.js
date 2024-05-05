@@ -6,6 +6,7 @@ import { Tiktoken } from "tiktoken/lite";
 import { load } from "tiktoken/load";
 import models from "tiktoken/model_to_encoding.json" assert { type: "json" };
 import registry from "../node_modules/tiktoken/registry.json" assert { type: "json" };
+import { SubscriberModel } from "../models/subscribersModel.js";
 
 dotenv.config();
 
@@ -86,6 +87,14 @@ export const turboStreamChat = async (socket, param) => {
     const answer = arr_answer.join("");
     //console.log(answer);
     console.log(`Completion token usage: ${completionTokens}`);
+    if (completionTokens > 0 && userId) { 
+      const tokenDeduct = await SubscriberModel.findOneAndUpdate(
+        { userId },
+        { $inc: { 'subscription_info.token': -completionTokens } },
+        { upsert: true }
+      );
+    }
+    console.log(`deduction token usage ${tokenDeduct}`);
     encoder.free();
     const newUserData = {
       userId: data.userId,

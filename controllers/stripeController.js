@@ -51,7 +51,7 @@ export const checkout = async (req, res, next) => {
     updatedData,
     { upsert: true }
   );
-  console.log("Subcription Process initated");
+  console.log("Subscription Process initiated");
   res.redirect(303, session.url);
 };
 
@@ -92,17 +92,20 @@ export const stripeWebhook = async (request, response) => {
     case "checkout.session.async_payment_failed":
       const checkoutSessionAsyncPaymentFailed = event.data.object;
       console.log("checkoutSessionAsyncPaymentFailed");
+      console.log(checkoutSessionAsyncPaymentFailed);
       // Then define and call a function to handle the event checkout.session.async_payment_failed
       customer;
       break;
     case "checkout.session.completed":
       const checkoutSessionCompleted = event.data.object;
       console.log("checkoutSessionCompleted");
+      console.log(checkoutSessionCompleted);
       // Then define and call a function to handle the event checkout.session.completed
       break;
     case "checkout.session.expired":
       const checkoutSessionExpired = event.data.object;
       console.log("checkoutSessionExpired");
+      console.log(checkoutSessionExpired);
       // Then define and call a function to handle the event checkout.session.expired
       break;
 
@@ -114,6 +117,7 @@ export const stripeWebhook = async (request, response) => {
         subscription_info: {
           id: customer.items.data[0]["subscription"],
           status: customer.status,
+          token: 3000,
           interval: customer.items.data[0]["plan"]["interval"],
           expiryAt: customer.current_period_end,
         },
@@ -124,11 +128,13 @@ export const stripeWebhook = async (request, response) => {
         { upsert: true }
       );
       console.log("Webhook subscription Created");
+      console.log(customer)
       break;
 
     case "customer.subscription.deleted":
       const customerSubscriptionDeleted = event.data.object;
       console.log("customerSubscriptionDeleted");
+      console.log(customerSubscriptionDeleted);
       // Then define and call a function to handle the event customer.subscription.deleted
       break;
     case "customer.subscription.paused":
@@ -154,6 +160,7 @@ export const stripeWebhook = async (request, response) => {
         subscription_info: {
           id: customerSubscriptionUpdated.items.data[0]["subscription"],
           status: customerSubscriptionUpdated.status,
+          token: 3000,
           interval: customerSubscriptionUpdated.items.data[0]["plan"]["interval"],
           expiryAt: customerSubscriptionUpdated.current_period_end,
         },
@@ -163,7 +170,8 @@ export const stripeWebhook = async (request, response) => {
         subs_update,
         { upsert: true }
       );
-      console.log("Webhook subcription updated");
+      console.log("Webhook subscription updated");
+      console.log(customerSubscriptionUpdated);
       break;
     // ... handle other event types
     default:
