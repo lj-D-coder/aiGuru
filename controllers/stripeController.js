@@ -46,11 +46,16 @@ export const checkout = async (req, res, next) => {
       expiryAt: "0",
     },
   };
+  
   const subscr_Info = await SubscriberModel.updateOne(
     { stripeCusId: customerId },
-    updatedData,
+    {
+      $set: updatedData,
+      $inc: { "subscription_info.token": 0 }
+    },
     { upsert: true }
   );
+  
   console.log("Subscription Process initiated");
   res.redirect(303, session.url);
 };

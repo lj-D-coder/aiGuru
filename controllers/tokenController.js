@@ -20,7 +20,10 @@ export const getToken = async (req, res, next) => {
 
 
 export const tokenUpdate = async (req, res, next) => {
-    const { userId, newTokenCount } = req.body;
+  const { userId, newTokenCount } = req.body;
+  console.log(typeof newTokenCount);
+  console.log(newTokenCount);
+
     try {
       const validUser = await Users.findOne({ _id: userId });
       if (!validUser) return next(errorHandler(404, "User not found!"));
