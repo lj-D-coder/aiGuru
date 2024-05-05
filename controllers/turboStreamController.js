@@ -94,8 +94,9 @@ export const turboStreamChat = async (socket, param) => {
         { $inc: { 'subscription_info.token': -completionTokens } },
         { upsert: true }
       );
+      console.log(`deduction token usage ${tokenDeduct}`);
     }
-    console.log(`deduction token usage ${tokenDeduct}`);
+    
     encoder.free();
     const newUserData = {
       userId: data.userId,
