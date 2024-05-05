@@ -23,6 +23,16 @@ export const turboStreamChat = async (socket, param) => {
 
   let completionTokens = 0;
 
+  var filter = "";
+
+  if (data.filters["summarize"]) {
+    filter = data.filters["marks"] === 0 ? "summarize" : `summarize in ${data.filters["marks"]} marks`;
+  } else if (data.filters["explainToKid"]) {
+    filter = data.filters["marks"] === 0 ? "explain to 5 years old" : `explain to 5 years old ${data.filters["marks"]} marks`;
+  } else {
+    filter = data.filters["marks"] > 0 ? `in ${data.filters["marks"]} marks` : "";
+  }
+
   // requesting chat gpt response
   try {
     var completion = await openai.chat.completions.create({
@@ -37,7 +47,7 @@ export const turboStreamChat = async (socket, param) => {
           content: [
             {
               type: "text",
-              text: "Analyze this image if is maths problem solve it accurately, if not answer the question accurately?",
+              text: `Analyze this image if is maths problem solve it accurately, if not answer the question accurately? ${filter}`,
             },
             {
               type: "image_url",
@@ -56,7 +66,7 @@ export const turboStreamChat = async (socket, param) => {
     let arr_answer = [];
     for await (const chunk of completion) {
       let message = chunk.choices[0].delta.content;
-      if (message === undefined) {
+      if (!message) {
         socket.disconnect(console.log("socket disconnected"));
       }
 
