@@ -28,7 +28,8 @@ export const turboStreamChat = async (socket, param) => {
   if (data.filters["summarize"]) {
     filter = data.filters["marks"] === 0 ? "summarize" : `summarize in ${data.filters["marks"]} marks`;
   } else if (data.filters["explainToKid"]) {
-    filter = data.filters["marks"] === 0 ? "explain to 5 years old" : `explain to 5 years old ${data.filters["marks"]} marks`;
+    filter =
+      data.filters["marks"] === 0 ? "explain to 5 years old" : `explain to 5 years old ${data.filters["marks"]} marks`;
   } else {
     filter = data.filters["marks"] > 0 ? `in ${data.filters["marks"]} marks` : "";
   }
@@ -60,29 +61,30 @@ export const turboStreamChat = async (socket, param) => {
       ],
       model: "gpt-4-turbo",
       stream: true,
-      // Set max-token based on user free/premium
+      temperature: 0.2,
     });
 
     let arr_answer = [];
     for await (const chunk of completion) {
       let message = chunk.choices[0].delta.content;
-      if (!message) {
-        socket.disconnect(console.log("socket disconnected"));
-      }
-
-      arr_answer.push(message);
-      socket.emit("answer-stream", `${message}`);
-      try {
-        // Your code here
-        const tokenList = encoder.encode(message);
-        completionTokens += tokenList.length;
-      } catch (error) {
-        console.error("An error occurred:", error);
+      if (message) {
+        arr_answer.push(message);
+        socket.emit("answer-stream", `${message}`);
+        try {
+          // Your code here
+          const tokenList = encoder.encode(message);
+          completionTokens += tokenList.length;
+        } catch (error) {
+          console.error("An error occurred:", error);
+        }
+        console.log(message);
       }
     }
 
+    socket.disconnect(console.log("socket disconnected"));
+
     const answer = arr_answer.join("");
-    console.log(answer);
+    //console.log(answer);
     console.log(`Completion token usage: ${completionTokens}`);
     encoder.free();
     const newUserData = {
