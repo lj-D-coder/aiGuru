@@ -19,6 +19,9 @@ const openai = new OpenAI({
 export const turboStreamChat = async (socket, param) => {
   let data = param;
   console.log(data);
+  console.log(
+    "=======================================the above is the request data from the app ============================================"
+  );
   const base64Image = data.base64Image;
   const model = await load(registry[models["gpt-4-turbo"]]);
   const encoder = new Tiktoken(model.bpe_ranks, model.special_tokens, model.pat_str);
@@ -36,29 +39,44 @@ export const turboStreamChat = async (socket, param) => {
     filter = data.filters["marks"] > 0 ? `in ${data.filters["marks"]} marks` : "";
   }
 
+  var chatContent;
+  var subject;
+
+  if (base64Image === "") {
+    var userQuestion = `${data.query} ? ${filter}`;
+    console.log(`Question: ${userQuestion}`);
+    chatContent = userQuestion;
+  } else {
+    var chatContent = [
+      {
+        type: "text",
+        text: `Analyze this image if is maths problem solve it accurately, if not answer the question accurately? ${filter}`,
+      },
+      {
+        type: "image_url",
+        image_url: {
+          url: base64Image,
+        },
+      },
+    ];
+  }
+
+  const instruction =
+    "Instructions: Give clear, precise answers.\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.\n";
+
+  const mathsFormat = "If calculation is there return compatible format for flutter_tex based on latex";
+
   // requesting chat gpt response
   try {
     var completion = await openai.chat.completions.create({
       messages: [
         {
           role: "system",
-          content:
-            "AI Tutor Instructions: Give clear, precise answers or solve.\n- assist students writing improvement and problem solving\n- Structure long answers\n- Avoid repetition.\n- be concise.\n if its math problem return compatible format for flutter_tex based on latex \n",
+          content: `your are ${subject} AI Tutor.\n ${instruction}`,
         },
         {
           role: "user",
-          content: [
-            {
-              type: "text",
-              text: `Analyze this image if is maths problem solve it accurately, if not answer the question accurately? ${filter}`,
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: base64Image,
-              },
-            },
-          ],
+          content: chatContent,
         },
       ],
       model: "gpt-4-turbo",
@@ -88,15 +106,15 @@ export const turboStreamChat = async (socket, param) => {
     const answer = arr_answer.join("");
     //console.log(answer);
     console.log(`Completion token usage: ${completionTokens}`);
-    if (completionTokens > 0 && data.userId) { 
+    if (completionTokens > 0 && data.userId) {
       const tokenDeduct = await SubscriberModel.findOneAndUpdate(
         { userId: data.userId },
-        { $inc: { 'subscription_info.token': -completionTokens } },
+        { $inc: { "subscription_info.token": -completionTokens } },
         { upsert: true }
       );
       console.log(`deduction token usage ${tokenDeduct}`);
     }
-    
+
     encoder.free();
     const newUserData = {
       userId: data.userId,
