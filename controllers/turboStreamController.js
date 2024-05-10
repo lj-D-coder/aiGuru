@@ -40,7 +40,10 @@ export const turboStreamChat = async (socket, param) => {
   }
 
   var chatContent;
-  var subject;
+  var subject = data.filters["subject"];
+  if (subject === 'Maths' || subject === 'Physics' || subject === 'Chemistry') { 
+    var mathsFormat = "If calculation is there return compatible format for flutter_tex based on latex";
+  }
 
   if (data.query === "") {
     var chatContent = [
@@ -61,10 +64,9 @@ export const turboStreamChat = async (socket, param) => {
     chatContent = userQuestion;
   }
 
-  const instruction =
-    "Instructions: Give clear, precise answers.\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.\n";
+  const instruction = `Instructions: Give clear, precise answers.\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.\n ${mathsFormat}`;
 
-  const mathsFormat = "If calculation is there return compatible format for flutter_tex based on latex";
+  
 
   // requesting chat gpt response
   try {
@@ -97,14 +99,14 @@ export const turboStreamChat = async (socket, param) => {
         } catch (error) {
           console.error("An error occurred:", error);
         }
-        console.log(message);
+        // console.log(message);
       }
     }
 
     socket.disconnect(console.log("socket disconnected"));
 
     const answer = arr_answer.join("");
-    //console.log(answer);
+    console.log(answer);
     console.log(`Completion token usage: ${completionTokens}`);
     if (completionTokens > 0 && data.userId) {
       const tokenDeduct = await SubscriberModel.findOneAndUpdate(
