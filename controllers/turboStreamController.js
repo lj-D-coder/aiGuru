@@ -40,6 +40,7 @@ export const turboStreamChat = async (socket, param) => {
   }
 
   var chatContent;
+  var mathsFormat = "";
   var subject = data.filters["subject"];
   if (subject === 'Maths' || subject === 'Physics' || subject === 'Chemistry') { 
     var mathsFormat = "If calculation is there return compatible format for flutter_tex based on latex";
