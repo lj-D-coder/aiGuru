@@ -42,11 +42,7 @@ export const turboStreamChat = async (socket, param) => {
   var chatContent;
   var subject;
 
-  if (base64Image === "") {
-    var userQuestion = `${data.query} ? ${filter}`;
-    console.log(`Question: ${userQuestion}`);
-    chatContent = userQuestion;
-  } else {
+  if (data.query === "") {
     var chatContent = [
       {
         type: "text",
@@ -59,6 +55,10 @@ export const turboStreamChat = async (socket, param) => {
         },
       },
     ];
+  } else {
+    var userQuestion = `${data.query} ? ${filter}`;
+    console.log(`Question: ${userQuestion}`);
+    chatContent = userQuestion;
   }
 
   const instruction =
