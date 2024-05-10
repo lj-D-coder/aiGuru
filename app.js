@@ -8,13 +8,16 @@ import authRouter from './routes/auth.js';
 import routes from './routes/route.js';
 import { Server } from 'socket.io';
 import OpenAI from "openai";
-// import { streamChat } from './controllers/streamController.js';
+import { streamChat } from './controllers/streamController.js';
 import { turboStreamChat } from './controllers/turboStreamController.js';
 import { stripeWebhook } from './controllers/stripeController.js';
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+// Create a new namespace for the second socket
+const chatSocket = io.of('/chat-socket');
+
 
 app.use('/stripe-webhook', express.raw({ type: 'application/json' }), stripeWebhook);
 
@@ -40,6 +43,16 @@ io.on('connection', (socket) => {
     socket.on('data-stream', (param) => {
         turboStreamChat(socket, param);
     })
+});
+
+
+// Second socket connection
+chatSocket.on('connection', (socket) => {
+    console.log('user connected to GPT3.5 chat socket');
+    console.log(socket.id, "has joined the GPT3.5 chat socket");
+    socket.on('data-stream', (param) => {
+        streamChat(socket, param);
+    });
 });
 
 //Routes 
@@ -72,6 +85,3 @@ mongoose
     .catch((error)=>{
         console.log(error);
     })
-
-
-

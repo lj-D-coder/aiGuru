@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import { UsersGenData } from "../models/usersGeneratedData.js";
-import chalk from 'chalk';
 
 dotenv.config();
 
@@ -9,16 +8,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const length = 100;
-// Generate a line of #
-const line = "#".repeat(length);
 
 // streaming function starts here
 
 export const streamChat = async (socket, param) => {
   let data = param;
   console.log(data);
-  console.log(chalk.red(line).toString());
   var filter = "";
 
   if (data.filters["summarize"]) {
@@ -32,7 +27,7 @@ export const streamChat = async (socket, param) => {
   var userMessage = `${data.query} ? ${filter}`;
   console.log(`Question: ${userMessage}`);
   // Print the line to the console
-  console.log(chalk.green(line).toString());
+
   try {
     var completion = await openai.chat.completions.create({
       messages: [
@@ -45,9 +40,8 @@ export const streamChat = async (socket, param) => {
           content: userMessage
         },
       ],
-      model: "gpt-4-turbo",
+      model: "gpt-3.5-turbo-0125",
       stream: true,
-      max_tokens: 2000,
       // Set max-token based on user free/premium
     });
 
@@ -65,7 +59,7 @@ export const streamChat = async (socket, param) => {
 
     const answer = arr_answer.join("");
     console.log(answer);
-    console.log(chalk.blue(line).toString());
+    
 
     const newUserData = {
       userId: data.userId,
