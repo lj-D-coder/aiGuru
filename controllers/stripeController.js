@@ -35,26 +35,26 @@ export const checkout = async (req, res, next) => {
   });
 
   //saving payment session in database
-  const updatedData = {
-    userId: getUser._id,
-    stripeCusId: customerId,
-    session_id: session.id,
-  };
+  // const updatedData = {
+  //   userId: getUser._id,
+  //   stripeCusId: customerId,
+  //   session_id: session.id,
+  // };
   
-  const initializeSub = await SubscriberModel.updateOne(
-    { stripeCusId: customerId },
-    {
-      $set: updatedData,
-      $set: {
-        "subscription_info.id": "0",
-        "subscription_info.status": "Free",
-        "subscription_info.interval": "0",
-        "subscription_info.expiryAt": "0",
-      },
-      $inc: { "subscription_info.token": 0 }
-    },
-    { upsert: true }
-  );
+  // const initializeSub = await SubscriberModel.updateOne(
+  //   { stripeCusId: customerId },
+  //   {
+  //     $set: updatedData,
+  //     $set: {
+  //       "subscription_info.id": "0",
+  //       "subscription_info.status": "Free",
+  //       "subscription_info.interval": "0",
+  //       "subscription_info.expiryAt": "0",
+  //     },
+  //     $inc: { "subscription_info.token": 0 }
+  //   },
+  //   { upsert: true }
+  // );
   
   console.log("Subscription Process initiated");
   res.redirect(303, session.url);
