@@ -61,7 +61,7 @@ export const signup = async (req, res, next) => {
     const sub_info = await SubscriberModel.updateOne({ stripeCusId: customer.id }, subcriptionData, { upsert: true });
     if (!sub_info) return next(errorHandler(404, "error in adding subscription info"));
     console.log("User Sign Up using Password and Email successfully");
-    const clearTemp = await TempUsers.deleteById(verificationId);
+    const clearTemp = await TempUsers.findByIdAndDelete(verificationId);
     return res.status(201).json({ success: true, JWT_token });
   } catch (error) {
     console.log(error.message);

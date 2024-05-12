@@ -5,7 +5,6 @@ const tempUsersSchema = mongoose.Schema(
         email:{
             type: String,
             require: true,
-            unique: true,
         },
         OTP: {
             type: String
