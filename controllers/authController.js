@@ -5,19 +5,29 @@ import jwt from "jsonwebtoken";
 import stripePackage from "stripe";
 import dotenv from "dotenv";
 import { SubscriberModel } from "../models/subscribersModel.js";
+import { TempUsers } from "../models/tempUserModel.js";
 dotenv.config();
 
 const stripe = stripePackage(process.env.STRIPE_KEY);
 
 export const signup = async (req, res, next) => {
   try {
-    if (!req.body.email || !req.body.password) {
+    const { email, password, verificationId, OTP } = req.body;
+
+    if (!email || !password || !OTP || !verificationId) {
       return res.status(400).json({
-        message: "send all required feilds: email, password",
+        message: "send all required fields: email, password, verificationId, OTP",
       });
     }
 
-    const { email, password } = req.body;
+    const checkUser = await Users.findOne({ email });
+    if (checkUser) return next(errorHandler(400, "Email is already register!"));
+
+    const verifyOTP = await TempUsers.findById(verificationId);
+
+    if (!verifyOTP && verifyOTP.OTP !== OTP) {
+      return next(errorHandler(400, "Invalid OTP entered !!!"));
+    }
 
     const username = email.split("@")[0];
     //creating Stripe Customer Id
@@ -25,7 +35,7 @@ export const signup = async (req, res, next) => {
       name: username,
       email: email,
     });
-    if (!customer) return next(errorHandler(404, "Somthing Went wrong Please Try agian later"));
+    if (!customer) return next(errorHandler(404, "Something Went wrong Please Try again later"));
     const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new Users({
       username,
@@ -50,7 +60,8 @@ export const signup = async (req, res, next) => {
     };
     const sub_info = await SubscriberModel.updateOne({ stripeCusId: customer.id }, subcriptionData, { upsert: true });
     if (!sub_info) return next(errorHandler(404, "error in adding subscription info"));
-    console.log("User Sign Up using Password and Email sucessfully");
+    console.log("User Sign Up using Password and Email successfully");
+    const clearTemp = await TempUsers.deleteById(verificationId);
     return res.status(201).json({ success: true, JWT_token });
   } catch (error) {
     console.log(error.message);
@@ -69,7 +80,7 @@ export const signin = async (req, res, next) => {
     if (!validPassword) return next(errorHandler(401, "Wrong credentials!"));
     const JWT_token = jwt.sign({ userId: validUser._id, email: validUser.email }, process.env.JWT_SECRET);
     const { password: pass, ...rest } = validUser._doc;
-    console.log("User Sign in using Password and Email sucessfully");
+    console.log("User Sign in using Password and Email successfully");
     res.status(200).json({ success: true, JWT_token });
     //.cookie("access_token", token, { httponly: true , maxAge: 24 * 60 * 60 * 1000 })
   } catch (error) {
@@ -80,7 +91,7 @@ export const signin = async (req, res, next) => {
 export const saveGoogleinfo = async (req, res, next) => {
   if (!req.body.email || !req.body.gToken || !req.body.expiry) {
     return response.status(400).json({
-      message: "send all required feilds: email, gToken, expiry",
+      message: "send all required fields: email, gToken, expiry",
     });
   }
 
