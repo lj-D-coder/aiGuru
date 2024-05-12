@@ -4,6 +4,8 @@ import { TempUsers } from "../models/tempUserModel.js";
 
 dotenv.config();
 const password = process.env.MAIL_PASS;
+console.log("hjhhjshjkahskhdkahjksdhkahkdhakhsdjkhashdkaj");
+console.log(password)
 
 const transporter = nodemailer.createTransport({
   host: "mail.bestaitutorapp.com",
