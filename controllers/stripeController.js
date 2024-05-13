@@ -5,6 +5,7 @@ import { Users } from "../models/usersModel.js";
 import { SubscriberModel } from "../models/subscribersModel.js";
 dotenv.config();
 
+const tokenizerValue = process.env.TOKEN_MULTIPLIER;
 const stripe = stripePackage(process.env.STRIPE_KEY);
 const YOUR_DOMAIN = process.env.YOUR_DOMAIN;
 export const checkout = async (req, res, next) => {
@@ -122,7 +123,7 @@ export const stripeWebhook = async (request, response) => {
         subscription_info: {
           id: customer.items.data[0]["subscription"],
           status: customer.status,
-          token: 3000,
+          token: tokenizerValue,
           interval: customer.items.data[0]["plan"]["interval"],
           expiryAt: customer.current_period_end,
         },
@@ -132,8 +133,9 @@ export const stripeWebhook = async (request, response) => {
         updatedData,
         { upsert: true }
       );
-      console.log("Webhook subscription Created");
+      console.log("====================Webhook subscription Created====================");
       console.log(customer)
+      console.log("====================Webhook subscription Created====================");
       break;
 
     case "customer.subscription.deleted":
@@ -159,6 +161,8 @@ export const stripeWebhook = async (request, response) => {
       break;
     
     case "customer.subscription.updated":
+      
+      
       const customerSubscriptionUpdated = event.data.object;
       const subs_update = {
         stripeCusId: customerSubscriptionUpdated.customer,
@@ -175,8 +179,9 @@ export const stripeWebhook = async (request, response) => {
         subs_update,
         { upsert: true }
       );
-      console.log("Webhook subscription updated");
+      console.log("====================Webhook subscription updated====================");
       console.log(customerSubscriptionUpdated);
+      console.log("====================Webhook subscription updated====================");
       break;
     // ... handle other event types
     default:

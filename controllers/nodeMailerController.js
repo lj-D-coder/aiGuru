@@ -14,8 +14,6 @@ const transporter = nodemailer.createTransport({
     user: "verification@bestaitutorapp.com",
     pass: password,
   },
-  logger: true,
-  debug: true
 });
 
 const generateOTP = (length = 4) => {
