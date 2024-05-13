@@ -169,7 +169,7 @@ export const stripeWebhook = async (request, response) => {
         subscription_info: {
           id: customerSubscriptionUpdated.items.data[0]["subscription"],
           status: customerSubscriptionUpdated.status,
-          token: 3000,
+          token: customerSubscriptionUpdated.items.data[0]["plan"]["amount"] * tokenizerValue,
           interval: customerSubscriptionUpdated.items.data[0]["plan"]["interval"],
           expiryAt: customerSubscriptionUpdated.current_period_end,
         },
