@@ -168,7 +168,7 @@ export const stripeWebhook = async (request, response) => {
             expiryAt: "0",
           },
         };
-        const resetToFree = await SubscriberModel.updateOne({ stripeCusId: customer.customer }, updatedData, {
+        const resetToFree = await SubscriberModel.updateOne({ stripeCusId: customerSubscriptionUpdated.customer }, updatedData, {
           upsert: true,
         });
       } else {
