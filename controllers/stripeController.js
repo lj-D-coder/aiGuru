@@ -118,21 +118,21 @@ export const stripeWebhook = async (request, response) => {
     //case
     case "customer.subscription.created":
       const customer = event.data.object;
-      const updatedData = {
-        stripeCusId: customer.customer,
-        subscription_info: {
-          id: customer.items.data[0]["subscription"],
-          status: customer.status,
-          token: tokenizerValue,
-          interval: customer.items.data[0]["plan"]["interval"],
-          expiryAt: customer.current_period_end,
-        },
-      };
-      const subscr_Info = await SubscriberModel.updateOne(
-        { stripeCusId: customer.customer },
-        updatedData,
-        { upsert: true }
-      );
+      // const updatedData = {
+      //   stripeCusId: customer.customer,
+      //   subscription_info: {
+      //     id: customer.items.data[0]["subscription"],
+      //     status: customer.status,
+      //     token: tokenizerValue,
+      //     interval: customer.items.data[0]["plan"]["interval"],
+      //     expiryAt: customer.current_period_end,
+      //   },
+      // };
+      // const subscr_Info = await SubscriberModel.updateOne(
+      //   { stripeCusId: customer.customer },
+      //   updatedData,
+      //   { upsert: true }
+      // );
       console.log("====================Webhook subscription Created====================");
       console.log(customer)
       console.log("====================Webhook subscription Created====================");
@@ -159,6 +159,13 @@ export const stripeWebhook = async (request, response) => {
       console.log("customerSubscriptionTrialWillEnd");
       // Then define and call a function to handle the event customer.subscription.trial_will_end
       break;
+    
+      case "subscription_schedule.completed":
+        const customerSubscriptionCompleted = event.data.object;
+        console.log("customerSubscriptionCompleted");
+        // Then define and call a function to handle the event customer.subscription.trial_will_end
+        break;
+      
     
     case "customer.subscription.updated":
       
