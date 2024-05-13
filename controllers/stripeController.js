@@ -11,8 +11,10 @@ const YOUR_DOMAIN = process.env.YOUR_DOMAIN;
 export const checkout = async (req, res, next) => {
   let userId = req.body.userId;
   const getUser = await Users.findById(userId);
-  
-  if (!getUser) { return next(errorHandler(404, "User not found!")) };
+
+  if (!getUser) {
+    return next(errorHandler(404, "User not found!"));
+  }
   const customerId = getUser.stripeCusId;
 
   const prices = await stripe.prices.list({
@@ -35,28 +37,21 @@ export const checkout = async (req, res, next) => {
     cancel_url: `${YOUR_DOMAIN}/cancel.html`,
   });
 
-  //saving payment session in database
-  // const updatedData = {
-  //   userId: getUser._id,
-  //   stripeCusId: customerId,
-  //   session_id: session.id,
-  // };
-  
-  // const initializeSub = await SubscriberModel.updateOne(
-  //   { stripeCusId: customerId },
-  //   {
-  //     $set: updatedData,
-  //     $set: {
-  //       "subscription_info.id": "0",
-  //       "subscription_info.status": "Free",
-  //       "subscription_info.interval": "0",
-  //       "subscription_info.expiryAt": "0",
-  //     },
-  //     $inc: { "subscription_info.token": 0 }
-  //   },
-  //   { upsert: true }
-  // );
-  
+  // saving payment session in database
+  const updatedData = {
+    userId: getUser._id,
+    stripeCusId: customerId,
+    session_id: session.id,
+  };
+
+  const initializeSub = await SubscriberModel.updateOne(
+    { stripeCusId: customerId },
+    {
+      $set: updatedData,
+    },
+    { upsert: true }
+  );
+
   console.log("Subscription Process initiated");
   res.redirect(303, session.url);
 };
@@ -65,20 +60,20 @@ export const createSession = async (req, res, next) => {
   try {
     const userId = req.body.userId;
     const findUser = await Users.findById(userId);
-    if (!findUser){ return next(errorHandler(404, "User not found!"))};
+    if (!findUser) {
+      return next(errorHandler(404, "User not found!"));
+    }
     const customerId = findUser.stripeCusId;
     const portalSession = await stripe.billingPortal.sessions.create({
-    customer: customerId,
-    return_url: `${YOUR_DOMAIN}/success.html`,
-  });
+      customer: customerId,
+      return_url: `${YOUR_DOMAIN}/success.html`,
+    });
     //res.redirect(303, portalSession.url);
     return res.status(200).json({ success: true, manageUrl: portalSession.url });
-    
   } catch (error) {
     console.log(error);
   }
 };
-
 
 export const stripeWebhook = async (request, response) => {
   // This is your Stripe CLI webhook secret for testing your endpoint locally.
@@ -117,32 +112,14 @@ export const stripeWebhook = async (request, response) => {
 
     //case
     case "customer.subscription.created":
-      const customer = event.data.object;
-      // const updatedData = {
-      //   stripeCusId: customer.customer,
-      //   subscription_info: {
-      //     id: customer.items.data[0]["subscription"],
-      //     status: customer.status,
-      //     token: tokenizerValue,
-      //     interval: customer.items.data[0]["plan"]["interval"],
-      //     expiryAt: customer.current_period_end,
-      //   },
-      // };
-      // const subscr_Info = await SubscriberModel.updateOne(
-      //   { stripeCusId: customer.customer },
-      //   updatedData,
-      //   { upsert: true }
-      // );
-      console.log("====================Webhook subscription Created====================");
-      console.log(customer)
-      console.log("====================Webhook subscription Created====================");
+      console.log("customerSubscriptionCreated");
+      
       break;
 
     case "customer.subscription.deleted":
       const customerSubscriptionDeleted = event.data.object;
-      console.log("customerSubscriptionDeleted");
+      
       console.log(customerSubscriptionDeleted);
-
 
       const updatedData = {
         stripeCusId: customer.customer,
@@ -154,59 +131,67 @@ export const stripeWebhook = async (request, response) => {
           expiryAt: "0",
         },
       };
-      const resetToFree = await SubscriberModel.updateOne(
-        { stripeCusId: customer.customer },
-        updatedData,
-        { upsert: true }
-      );  
-      
+      const resetToFree = await SubscriberModel.updateOne({ stripeCusId: customer.customer }, updatedData, {
+        upsert: true,
+      });
+
+      console.log("customerSubscriptionDeleted");
       // Then define and call a function to handle the event customer.subscription.deleted
       break;
-    
+
     case "customer.subscription.resumed":
       const customerSubscriptionResumed = event.data.object;
       console.log("customerSubscriptionResumed");
       // Then define and call a function to handle the event customer.subscription.resumed
       break;
     case "customer.subscription.trial_will_end":
-      
       // Then define and call a function to handle the event customer.subscription.trial_will_end
       break;
-    
-      case "subscription_schedule.completed":
-        const customerSubscriptionCompleted = event.data.object;
-        console.log("customerSubscriptionCompleted");
-        // Then define and call a function to handle the event customer.subscription.trial_will_end
-        break;
-      
-    
+
+    case "subscription_schedule.completed":
+      const customerSubscriptionCompleted = event.data.object;
+      console.log("customerSubscriptionCompleted");
+      // Then define and call a function to handle the event customer.subscription.trial_will_end
+      break;
+
     case "customer.subscription.updated":
-      
       const updateEventData = event;
 
-      if (updateEventData.request.id) { 
-        console.log("cancel requested")
+      if (updateEventData.request.id) {
+        const updatedData = {
+          stripeCusId: customer.customer,
+          subscription_info: {
+            id: "0",
+            status: "free",
+            token: 0,
+            interval: "0",
+            expiryAt: "0",
+          },
+        };
+        const resetToFree = await SubscriberModel.updateOne({ stripeCusId: customer.customer }, updatedData, {
+          upsert: true,
+        });
+      } else {
+        const customerSubscriptionUpdated = event.data.object;
+        const subs_update = {
+          stripeCusId: customerSubscriptionUpdated.customer,
+          subscription_info: {
+            id: customerSubscriptionUpdated.items.data[0]["subscription"],
+            status: customerSubscriptionUpdated.status,
+            token: customerSubscriptionUpdated.items.data[0]["plan"]["amount"] * tokenizerValue,
+            interval: customerSubscriptionUpdated.items.data[0]["plan"]["interval"],
+            expiryAt: customerSubscriptionUpdated.current_period_end,
+          },
+        };
+        const updateInfo = await SubscriberModel.updateOne(
+          { stripeCusId: customerSubscriptionUpdated.customer },
+          subs_update,
+          { upsert: true }
+        );
       }
 
-      // const customerSubscriptionUpdated = event.data.object;
-      // const subs_update = {
-      //   stripeCusId: customerSubscriptionUpdated.customer,
-      //   subscription_info: {
-      //     id: customerSubscriptionUpdated.items.data[0]["subscription"],
-      //     status: customerSubscriptionUpdated.status,
-      //     token: customerSubscriptionUpdated.items.data[0]["plan"]["amount"] * tokenizerValue,
-      //     interval: customerSubscriptionUpdated.items.data[0]["plan"]["interval"],
-      //     expiryAt: customerSubscriptionUpdated.current_period_end,
-      //   },
-      // };
-      // const updateInfo = await SubscriberModel.updateOne(
-      //   { stripeCusId: customerSubscriptionUpdated.customer },
-      //   subs_update,
-      //   { upsert: true }
-      // );
       console.log("====================Webhook subscription updated====================");
-      console.log(updateEventData);
-      console.log("====================Webhook subscription updated====================");
+      
       break;
     // ... handle other event types
     default:
