@@ -156,10 +156,10 @@ export const stripeWebhook = async (request, response) => {
 
     case "customer.subscription.updated":
       const updateEventData = event;
-
+      const customerSubscriptionUpdated = updateEventData.data.object;
       if (updateEventData.request.id) {
         const updatedData = {
-          stripeCusId: customer.customer,
+          stripeCusId: customerSubscriptionUpdated.customer,
           subscription_info: {
             id: "0",
             status: "free",
@@ -172,7 +172,6 @@ export const stripeWebhook = async (request, response) => {
           upsert: true,
         });
       } else {
-        const customerSubscriptionUpdated = event.data.object;
         const subs_update = {
           stripeCusId: customerSubscriptionUpdated.customer,
           subscription_info: {
