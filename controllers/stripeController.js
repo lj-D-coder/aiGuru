@@ -142,8 +142,27 @@ export const stripeWebhook = async (request, response) => {
       const customerSubscriptionDeleted = event.data.object;
       console.log("customerSubscriptionDeleted");
       console.log(customerSubscriptionDeleted);
+
+
+      const updatedData = {
+        stripeCusId: customer.customer,
+        subscription_info: {
+          id: "0",
+          status: "free",
+          token: 0,
+          interval: "0",
+          expiryAt: "0",
+        },
+      };
+      const resetToFree = await SubscriberModel.updateOne(
+        { stripeCusId: customer.customer },
+        updatedData,
+        { upsert: true }
+      );  
+      
       // Then define and call a function to handle the event customer.subscription.deleted
       break;
+    
     case "customer.subscription.paused":
       const customerSubscriptionPaused = event.data.object;
       console.log("customerSubscriptionPaused");
@@ -181,7 +200,7 @@ export const stripeWebhook = async (request, response) => {
           expiryAt: customerSubscriptionUpdated.current_period_end,
         },
       };
-      const subscr_update_Info = await SubscriberModel.updateOne(
+      const updateInfo = await SubscriberModel.updateOne(
         { stripeCusId: customerSubscriptionUpdated.customer },
         subs_update,
         { upsert: true }
