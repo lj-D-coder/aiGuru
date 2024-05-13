@@ -183,6 +183,11 @@ export const stripeWebhook = async (request, response) => {
     case "customer.subscription.updated":
       
       const updateEventData = event;
+
+      if (updateEventData.request.id) { 
+        console.log("cancel requested")
+      }
+
       // const customerSubscriptionUpdated = event.data.object;
       // const subs_update = {
       //   stripeCusId: customerSubscriptionUpdated.customer,
