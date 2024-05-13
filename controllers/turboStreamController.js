@@ -4,8 +4,8 @@ import { UsersGenData } from "../models/usersGeneratedData.js";
 import hitCounter from "../utils/counter.js";
 import { Tiktoken } from "tiktoken/lite";
 import { load } from "tiktoken/load";
-import models from "tiktoken/model_to_encoding.json" assert { type: "json" };
-import registry from "../node_modules/tiktoken/registry.json" assert { type: "json" };
+import models from "tiktoken/model_to_encoding.json" with { type: "json" };
+import registry from "../node_modules/tiktoken/registry.json" with { type: "json" };
 import { SubscriberModel } from "../models/subscribersModel.js";
 
 dotenv.config();
