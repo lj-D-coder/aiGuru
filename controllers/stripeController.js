@@ -163,19 +163,13 @@ export const stripeWebhook = async (request, response) => {
       // Then define and call a function to handle the event customer.subscription.deleted
       break;
     
-    case "customer.subscription.paused":
-      const customerSubscriptionPaused = event.data.object;
-      console.log("customerSubscriptionPaused");
-      // Then define and call a function to handle the event customer.subscription.paused
-      break;
     case "customer.subscription.resumed":
       const customerSubscriptionResumed = event.data.object;
       console.log("customerSubscriptionResumed");
       // Then define and call a function to handle the event customer.subscription.resumed
       break;
     case "customer.subscription.trial_will_end":
-      const customerSubscriptionTrialWillEnd = event.data.object;
-      console.log("customerSubscriptionTrialWillEnd");
+      
       // Then define and call a function to handle the event customer.subscription.trial_will_end
       break;
     
@@ -188,25 +182,25 @@ export const stripeWebhook = async (request, response) => {
     
     case "customer.subscription.updated":
       
-      
-      const customerSubscriptionUpdated = event.data.object;
-      const subs_update = {
-        stripeCusId: customerSubscriptionUpdated.customer,
-        subscription_info: {
-          id: customerSubscriptionUpdated.items.data[0]["subscription"],
-          status: customerSubscriptionUpdated.status,
-          token: customerSubscriptionUpdated.items.data[0]["plan"]["amount"] * tokenizerValue,
-          interval: customerSubscriptionUpdated.items.data[0]["plan"]["interval"],
-          expiryAt: customerSubscriptionUpdated.current_period_end,
-        },
-      };
-      const updateInfo = await SubscriberModel.updateOne(
-        { stripeCusId: customerSubscriptionUpdated.customer },
-        subs_update,
-        { upsert: true }
-      );
+      const updateEventData = event;
+      // const customerSubscriptionUpdated = event.data.object;
+      // const subs_update = {
+      //   stripeCusId: customerSubscriptionUpdated.customer,
+      //   subscription_info: {
+      //     id: customerSubscriptionUpdated.items.data[0]["subscription"],
+      //     status: customerSubscriptionUpdated.status,
+      //     token: customerSubscriptionUpdated.items.data[0]["plan"]["amount"] * tokenizerValue,
+      //     interval: customerSubscriptionUpdated.items.data[0]["plan"]["interval"],
+      //     expiryAt: customerSubscriptionUpdated.current_period_end,
+      //   },
+      // };
+      // const updateInfo = await SubscriberModel.updateOne(
+      //   { stripeCusId: customerSubscriptionUpdated.customer },
+      //   subs_update,
+      //   { upsert: true }
+      // );
       console.log("====================Webhook subscription updated====================");
-      console.log(customerSubscriptionUpdated);
+      console.log(updateEventData);
       console.log("====================Webhook subscription updated====================");
       break;
     // ... handle other event types
