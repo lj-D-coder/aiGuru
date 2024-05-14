@@ -6,6 +6,7 @@ dotenv.config();
 const password = process.env.MAIL_PASS;
 
 const transporter = nodemailer.createTransport({
+  name: "bestaitutorapp.com",
   host: "mail.bestaitutorapp.com",
   port: 465,
   secure: true, // Use `true` for port 465, `false` for all other ports
@@ -13,7 +14,6 @@ const transporter = nodemailer.createTransport({
     user: "verification@bestaitutorapp.com",
     pass: password,
   },
-  logger: true,
 });
 
 const generateOTP = (length = 4) => {
