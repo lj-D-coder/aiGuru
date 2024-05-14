@@ -8,6 +8,8 @@ dotenv.config();
 const tokenizerValue = process.env.TOKEN_MULTIPLIER;
 const stripe = stripePackage(process.env.STRIPE_KEY);
 const YOUR_DOMAIN = process.env.YOUR_DOMAIN;
+
+
 export const checkout = async (req, res, next) => {
   let userId = req.body.userId;
   const getUser = await Users.findById(userId);
