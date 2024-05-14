@@ -82,7 +82,7 @@ export const turboStreamChat = async (socket, param) => {
           content: chatContent,
         },
       ],
-      model: "gpt-4-turbo",
+      model: "gpt-4o",
       stream: true,
       temperature: 0.2,
     });
