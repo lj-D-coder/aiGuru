@@ -6,7 +6,7 @@ dotenv.config();
 const password = process.env.MAIL_PASS;
 
 const transporter = nodemailer.createTransport({
-  name: "mail.bestaitutorapp.com",
+  name: "api.bestaitutor.app",
   host: "mail.bestaitutorapp.com",
   port: 465,
   secure: true, // Use `true` for port 465, `false` for all other ports
