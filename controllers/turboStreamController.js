@@ -56,6 +56,7 @@ export const turboStreamChat = async (socket, param) => {
         type: "image_url",
         image_url: {
           url: base64Image,
+          detail: "low"
         },
       },
     ];
