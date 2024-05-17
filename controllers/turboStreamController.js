@@ -18,18 +18,7 @@ const openai = new OpenAI({
 
 export const turboStreamChat = async (socket, param) => {
   let data = param;
-  console.log(data);
-  console.log("============================the above is the request data from the app ============================");
   const base64Images = data.base64Images;
-  if (base64Images || base64Images.length !== 0) {
-    var imageContent = base64Images.map((imageUrl) => ({
-      type: "image_url",
-      image_url: {
-        url: imageUrl,
-      },
-    }));
-  }
-
   const model = await load(registry[models["gpt-4-turbo"]]);
   const encoder = new Tiktoken(model.bpe_ranks, model.special_tokens, model.pat_str);
 
@@ -58,9 +47,14 @@ export const turboStreamChat = async (socket, param) => {
     var chatContent = [
       {
         type: "text",
-        text: `Analyze this image if is maths problem solve it accurately, if not answer the question accurately? ${filterText}`,
+        text: ` your are ${subject} AI assistant, ${filterText}`,
       },
-      ...imageContent,
+      ...base64Images.map(url => ({
+        type: "image_url",
+        image_url: {
+          "url": url,
+        },
+      }))
     ];
   } else {
     var userQuestion = `${data.query} ? ${filterText}`;
