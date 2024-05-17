@@ -4,9 +4,9 @@ import { UsersGenData } from "../models/usersGeneratedData.js";
 import hitCounter from "../utils/counter.js";
 import { Tiktoken } from "tiktoken/lite";
 import { load } from "tiktoken/load";
+import { SubscriberModel } from "../models/subscribersModel.js";
 import models from "tiktoken/model_to_encoding.json" with { type: "json" };
 import registry from "../node_modules/tiktoken/registry.json" with { type: "json" };
-import { SubscriberModel } from "../models/subscribersModel.js";
 
 dotenv.config();
 
@@ -19,30 +19,38 @@ const openai = new OpenAI({
 export const turboStreamChat = async (socket, param) => {
   let data = param;
   console.log(data);
-  console.log(
-    "=======================================the above is the request data from the app ============================================"
-  );
-  const base64Image = data.base64Image;
+  console.log("============================the above is the request data from the app ============================");
+  const base64Images = data.base64Images;
+  if (base64Images || base64Images.length !== 0) {
+    var imageContent = base64Images.map((imageUrl) => ({
+      type: "image_url",
+      image_url: {
+        url: imageUrl,
+      },
+    }));
+  }
+
   const model = await load(registry[models["gpt-4-turbo"]]);
   const encoder = new Tiktoken(model.bpe_ranks, model.special_tokens, model.pat_str);
 
   let completionTokens = 0;
-
-  var filter = "";
+  var filterText = "";
 
   if (data.filters["summarize"]) {
-    filter = data.filters["marks"] === 0 ? "summarize" : `summarize in ${data.filters["marks"]} marks`;
+    filterText = data.filters["marks"] === 0 ? "summarize" : `summarize in ${data.filters["marks"]} marks`;
   } else if (data.filters["explainToKid"]) {
-    filter =
+    filterText =
       data.filters["marks"] === 0 ? "explain to 5 years old" : `explain to 5 years old ${data.filters["marks"]} marks`;
+  } else if (data.filters["custom"]) {
+    filterText = data.filters["custom"];
   } else {
-    filter = data.filters["marks"] > 0 ? `in ${data.filters["marks"]} marks` : "";
+    filterText = data.filters["marks"] > 0 ? `in ${data.filters["marks"]} marks` : "";
   }
 
   var chatContent;
   var mathsFormat = "";
   var subject = data.filters["subject"];
-  if (subject === 'Maths' || subject === 'Physics' || subject === 'Chemistry') { 
+  if (subject === "Maths" || subject === "Physics" || subject === "Chemistry") {
     var mathsFormat = "If calculation is there return compatible format for flutter_tex based on latex";
   }
 
@@ -50,25 +58,17 @@ export const turboStreamChat = async (socket, param) => {
     var chatContent = [
       {
         type: "text",
-        text: `Analyze this image if is maths problem solve it accurately, if not answer the question accurately? ${filter}`,
+        text: `Analyze this image if is maths problem solve it accurately, if not answer the question accurately? ${filterText}`,
       },
-      {
-        type: "image_url",
-        image_url: {
-          url: base64Image,
-          detail: "low"
-        },
-      },
+      ...imageContent,
     ];
   } else {
-    var userQuestion = `${data.query} ? ${filter}`;
+    var userQuestion = `${data.query} ? ${filterText}`;
     console.log(`Question: ${userQuestion}`);
     chatContent = userQuestion;
   }
 
   const instruction = `Instructions: Give clear, precise answers.\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.\n ${mathsFormat}`;
-
-  
 
   // requesting chat gpt response
   try {
@@ -87,6 +87,8 @@ export const turboStreamChat = async (socket, param) => {
       stream: true,
       temperature: 0.2,
     });
+
+    //response
 
     let arr_answer = [];
     for await (const chunk of completion) {

@@ -36,12 +36,6 @@ export const sendEmail = async (req, res) => {
       to: email, // list of receivers
       subject: "Email Verification OTP", // Subject line
       text: "Your OTP", // plain text body
-      dsn: {
-        id: 'some random message specific id',
-        return: 'headers',
-        notify: ['failure', 'delay'],
-        recipient: 'sender@example.com'
-    },
       html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
             <html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
              <head>
