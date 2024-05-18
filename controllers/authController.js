@@ -9,6 +9,8 @@ import { TempUsers } from "../models/tempUserModel.js";
 dotenv.config();
 
 const stripe = stripePackage(process.env.STRIPE_KEY);
+let freeToken = process.env.FREE_TOKEN;
+if (!freeToken) { freeToken = 0 };
 
 export const signup = async (req, res, next) => {
   try {
@@ -53,7 +55,7 @@ export const signup = async (req, res, next) => {
       subscription_info: {
         id: "0",
         status: "Free",
-        token: 3000,
+        token: freeToken,
         interval: "0",
         expiryAt: "0",
       },
@@ -126,7 +128,7 @@ export const saveGoogleinfo = async (req, res, next) => {
         subscription_info: {
           id: "0",
           status: "Free",
-          token: 3000,
+          token: freeToken,
           interval: "0",
           expiryAt: "0",
         },
