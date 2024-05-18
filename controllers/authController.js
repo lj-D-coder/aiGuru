@@ -151,3 +151,42 @@ export const saveGoogleinfo = async (req, res, next) => {
     console.log(error.message);
   }
 };
+
+
+
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const { email, verificationId, OTP } = req.body;
+
+    if (!email || !OTP || !verificationId) {
+      return res.status(400).json({
+        message: "send all required fields: email, verificationId, OTP",
+      });
+    }
+
+    const checkUser = await Users.findOne({ email });
+    if (!checkUser) return next(errorHandler(400, "Email does not register!"));
+
+    const verifyOTP = await TempUsers.findById(verificationId);
+
+    if (!verifyOTP && verifyOTP.OTP !== OTP) {
+      return next(errorHandler(400, "Invalid OTP entered !!!"));
+    }
+
+    const deleteSubscription = await SubscriberModel.deleteOne({ userId: checkUser._id });
+    const clearTemp = await TempUsers.findByIdAndDelete(verificationId);
+    const deleteUser = await Users.findByIdAndDelete({ _id: checkUser._id });
+    
+    if (!deleteSubscription || !clearTemp || !deleteUser) { 
+      return next(errorHandler(400, "Oops something went Wrong!"));
+    }
+
+    
+    console.log("User data and Email successfully");
+    
+    return res.status(201).json({ success: true, message: "Account deactivated permanently" });
+  } catch (error) {
+    console.log(error.message);
+    next(errorHandler(400, "something went wrong"));
+  }
+};
