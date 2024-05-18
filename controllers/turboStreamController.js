@@ -18,6 +18,8 @@ const openai = new OpenAI({
 
 export const turboStreamChat = async (socket, param) => {
   let data = param;
+  console.log(data);
+  console.log("=============User Request data ===============")
   const base64Images = data.base64Images;
   const model = await load(registry[models["gpt-4-turbo"]]);
   const encoder = new Tiktoken(model.bpe_ranks, model.special_tokens, model.pat_str);
@@ -62,6 +64,9 @@ export const turboStreamChat = async (socket, param) => {
     chatContent = userQuestion;
   }
 
+  console.log("=============Following is Chat Content data ===============")
+  console.log(chatContent)
+
   const instruction = `Instructions: Give clear, precise answers.\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.\n ${mathsFormat}`;
 
   // requesting chat gpt response
@@ -79,7 +84,7 @@ export const turboStreamChat = async (socket, param) => {
       ],
       model: "gpt-4o",
       stream: true,
-      temperature: 0.2,
+      temperature: 0.3,
     });
 
     //response
