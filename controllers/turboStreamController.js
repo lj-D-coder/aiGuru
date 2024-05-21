@@ -14,6 +14,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+let extraTokenCharges = process.env.TOKEN_DEDUCTION_TAX;
+if (!extraTokenCharges) { extraTokenCharges = 100 };
+
 // streaming function starts here
 
 export const turboStreamChat = async (socket, param) => {
@@ -42,7 +45,7 @@ export const turboStreamChat = async (socket, param) => {
   var mathsFormat = "";
   var subject = data.filters["subject"];
   if (subject === "Maths" || subject === "Physics" || subject === "Chemistry") {
-    var mathsFormat = "If calculation is there return compatible format for flutter_tex based on latex";
+    var mathsFormat = "If calculation is there, provide simple solution do not over complicate things and return compatible format for flutter_tex based on latex";
   }
 
   if (data.query === "") {
@@ -67,7 +70,7 @@ export const turboStreamChat = async (socket, param) => {
   console.log("=============Following is Chat Content data ===============")
   console.log(chatContent)
 
-  const instruction = `Instructions: Give clear, precise answers.\n- assist students writing improvement\n- Structure long answers\n- Avoid repetition.\n- be concise.\n ${mathsFormat}`;
+  const instruction = `Instructions: Give clear, precise simplified answers.\n- assist students writing improvement\n- if answers is long structure properly\n- Avoid repetition.\n- be concise.\n ${mathsFormat}`;
 
   // requesting chat gpt response
   try {
@@ -111,10 +114,11 @@ export const turboStreamChat = async (socket, param) => {
     const answer = arr_answer.join("");
     console.log(answer);
     console.log(`Completion token usage: ${completionTokens}`);
+    const totalTokenConsumption = completionTokens + extraTokenCharges;
     if (completionTokens > 0 && data.userId) {
       const tokenDeduct = await SubscriberModel.findOneAndUpdate(
         { userId: data.userId },
-        { $inc: { "subscription_info.token": -completionTokens } },
+        { $inc: { "subscription_info.token": -totalTokenConsumption } },
         { upsert: true }
       );
     }
