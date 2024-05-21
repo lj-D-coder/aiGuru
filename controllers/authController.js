@@ -14,7 +14,8 @@ if (!freeToken) { freeToken = 0 };
 
 export const signup = async (req, res, next) => {
   try {
-    const { email, password, verificationId, OTP } = req.body;
+    const { password, verificationId, OTP } = req.body;
+    const email = req.body.email.trim();
 
     if (!email || !password || !OTP || !verificationId) {
       return res.status(400).json({
@@ -74,7 +75,8 @@ export const signup = async (req, res, next) => {
 };
 
 export const signin = async (req, res, next) => {
-  const { email, password } = req.body;
+  const {password } = req.body;
+  const email = req.body.email.trim();
   try {
     const validUser = await Users.findOne({ email });
     if (!validUser) return next(errorHandler(404, "User not found!"));
