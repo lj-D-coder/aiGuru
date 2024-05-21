@@ -28,7 +28,7 @@ const generateOTP = (length = 4) => {
 // Controller
 export const sendEmail = async (req, res) => {
   try {
-    const { email } = req.body;
+    const email = req.body.email.trim();
     const fourDigitOTP = generateOTP();
 
     const info = await transporter.sendMail({
