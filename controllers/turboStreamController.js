@@ -116,6 +116,7 @@ export const turboStreamChat = async (socket, param) => {
     console.log(`Completion token usage: ${completionTokens}`);
     const totalTokenConsumption = (completionTokens + extraTokenCharges);
     console.log(`extra token usage: ${extraTokenCharges}`);
+    console.log(`Total totalTokenConsumption token usage: ${totalTokenConsumption}`);
 
     if (completionTokens > 0 && data.userId) {
       const tokenDeduct = await SubscriberModel.findOneAndUpdate(
