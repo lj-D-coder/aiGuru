@@ -14,7 +14,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-let extraTokenCharges = process.env.TOKEN_DEDUCTION_TAX;
+let extraTokenCharges = Number(process.env.TOKEN_DEDUCTION_TAX);
 if (!extraTokenCharges) { extraTokenCharges = 100 };
 
 // streaming function starts here
