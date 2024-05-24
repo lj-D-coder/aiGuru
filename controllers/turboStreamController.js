@@ -45,7 +45,7 @@ export const turboStreamChat = async (socket, param) => {
   var mathsFormat = "";
   var subject = data.filters["subject"];
   if (subject === "Maths" || subject === "Physics" || subject === "Chemistry") {
-    var mathsFormat = "If calculation is there, provide step by step simple solution make it short and understandable to a student, If there is text explanation give it in new line and return compatible format for flutter_tex based on latex";
+    var mathsFormat = "If calculation is there, provide step by step simple solution make it short and understandable to a student, return all the maths equation inside $ sign tag for example $a+b=c$";
   }
 
   if (data.query === "") {
